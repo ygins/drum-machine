@@ -14,19 +14,20 @@ export default class App extends React.Component<Props, State>{
   render() {
     return (
       <div className="DrumMachineApp">
-        <Grid>
-          <Themes.Context.Provider value="default">
+        <Themes.Context.Provider value={Themes.THEMES.DEFAULT}>
+          <Grid>
             <DrumMachine></DrumMachine>
-          </Themes.Context.Provider>
-        </Grid>
+          </Grid>
+        </Themes.Context.Provider>
       </div>
     );
   }
 }
 
 const Grid: React.FC = (props: any) => {
+  const theme=React.useContext(Themes.Context);
   return (
-    <div id="root-grid">
+    <div id="root-grid" style={{background:theme.background}}>
       {props.children}
     </div>
   )

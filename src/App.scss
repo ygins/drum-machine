@@ -1,11 +1,12 @@
 #root-grid {
   display: grid;
-  grid-template-columns: repeat(5, 20vw);
-  grid-template-rows: repeat(5,20vh);
+  grid-template-columns: 10vw 20vw 20vw 20vw 20vw 10vw;
+  grid-template-rows: 10vh 20vh 20vh 20vh 20vh 10vh;
   grid-template-areas:
-    "header header header header header"
-    "left drum drum drum right"
-    "left drum drum drum right"
-    "footer footer footer footer footer";
-  background-color: yellow;
+    "header header header header header header"
+    "left drum drum drum drum right"
+    "left drum drum drum drum right"
+    "left drum drum drum drum right"
+    "left drum drum drum drum right"
+    "footer footer footer footer footer footer";
 }

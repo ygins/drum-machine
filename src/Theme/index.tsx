@@ -2,6 +2,7 @@ import React from "react";
 
 interface Theme {
   background: string,
+  machine: string,
   border: string,
   button: string,
   text: string
@@ -9,15 +10,20 @@ interface Theme {
 
 const themeMap = new Map<string, Theme>();
 
-themeMap.set("default", {
-  background: "red",
-  border: "black",
-  button: "blue",
-  text: "white"
-});
+const THEMES={
+  DEFAULT:{
+    background: "#F7D87C",
+    machine: "#28CCFA",
+    border: "5px solid black",
+    button: "blue",
+    text: "white"
+  }
+}
+themeMap.set("default", THEMES.DEFAULT);
 
 export default {
-  Context: React.createContext<string>("dark"),
+  Context: React.createContext<Theme>(THEMES.DEFAULT),
+  THEMES: THEMES,
   addTheme: (name: string, theme: Theme) => themeMap.set(name, theme),
   getTheme: (name: string) => {
     const result = themeMap.get(name);

@@ -10,14 +10,17 @@ interface State {
 };
 
 export default class DrumMachine extends React.Component<Props, State>{
-  static contextType=Themes.Context;
+  static contextType = Themes.Context;
   constructor(props: Props) {
     super(props);
   }
-  render(){
-    const currentTheme=Themes.getTheme(this.context);
+  render() {
+    const currentTheme = this.context
     return (
-      <div id="frame" style={{backgroundColor: currentTheme.background}}>
+      <div id="frame" style={{
+        backgroundColor: currentTheme.machine,
+        border: currentTheme.border
+      }}>
         <p>hey!</p>
       </div>
     )
