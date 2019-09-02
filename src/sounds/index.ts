@@ -12,8 +12,10 @@ fetch("http://localhost:2323/paths").then(response => response.json()).then(resp
   });
 }).catch(e => console.log(e));
 
-export default class HowlCache {
-  private readonly cache: Map<string, Map<string, Howl>> = new Map();
+type HowlProvider=()=>Howl
+
+export class SoundCache {
+  private readonly cache: WeakMap<String, WeakMap<String, Howl>> = new Map();
   private readonly pull = (category: string, sound: string): Promise<Howl> => {
     return new Promise<Howl>((resolve, reject) => {
       const howlObj = new Howl({
@@ -23,7 +25,7 @@ export default class HowlCache {
       howlObj.once("loaderror", () => reject("Error loading howl!"));
     });
   }
-  public readonly get = async (category: string, sound: string): Promise<Howl | undefined> => {
+  public readonly get = async (category: string, sound: string): Promise<HowlProvider | undefined> => {
     const categoryArr = sounds.get(category);
     if (!categoryArr) {
       return undefined;
@@ -35,6 +37,11 @@ export default class HowlCache {
     const howl = howlMap.get(sound) || await this.pull(category, sound);
     howlMap.set(sound, howl);
     this.cache.set(category, howlMap);
-    return howl;
+    return ()=>JSON.parse(JSON.stringify(howl));
   }
+}
+
+export interface Sound{
+  category: string,
+  sound: string
 }

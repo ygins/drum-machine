@@ -1,6 +1,7 @@
 import React from 'react';
 import Themes from "./Theme";
 import DrumMachine from "./components/DrumMachine";
+import {SoundCache} from "./sounds";
 
 import "./App.scss";
 
@@ -16,7 +17,7 @@ export default class App extends React.Component<Props, State>{
       <div className="DrumMachineApp">
         <Themes.Context.Provider value={Themes.THEMES.DEFAULT}>
           <Grid>
-            <DrumMachine></DrumMachine>
+            <DrumMachine soundCache={new SoundCache()}></DrumMachine>
           </Grid>
         </Themes.Context.Provider>
       </div>

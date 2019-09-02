@@ -4,6 +4,7 @@ interface Theme {
   background: string,
   machine: string,
   border: string,
+  trackBorder: string,
   button: string,
   text: string
 }
@@ -15,6 +16,7 @@ const THEMES={
     background: "#F7D87C",
     machine: "#28CCFA",
     border: "5px solid black",
+    trackBorder: "2px solid black",
     button: "blue",
     text: "white"
   }
