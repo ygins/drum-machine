@@ -1,6 +1,7 @@
 import React from "react";
 import Themes from "../../Theme";
 import "./style.scss";
+import Sounds from "../.././sounds/Sounds";
 interface Props {
 
 };
