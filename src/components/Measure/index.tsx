@@ -1,16 +1,24 @@
 import React from "react";
 
-interface State{
+interface State {
 
 }
 
-interface Props{
+interface Props {
   amtBeats: number
 }
 
 
 export class Measure extends React.Component<Props, State>{
-  constructor(props:Props){
+  constructor(props: Props) {
     super(props);
+  }
+
+  render() {
+    return (
+      <div className="measure">
+        
+      </div>
+    )
   }
 }
