@@ -30,7 +30,7 @@ export class SoundCache {
     if (!categoryArr) {
       return undefined;
     }
-    if (categoryArr.indexOf(sound) == -1) {
+    if (categoryArr.indexOf(sound) === -1) {
       return undefined;
     }
     const howlMap = this.cache.get(category) || new Map();

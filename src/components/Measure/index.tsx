@@ -11,9 +11,6 @@ interface Props {
 
 
 export default class Measure extends React.Component<Props, State>{
-  constructor(props: Props) {
-    super(props);
-  }
 
   render() {
     return (
@@ -23,7 +20,6 @@ export default class Measure extends React.Component<Props, State>{
         gridRowStart:1,
         gridRowEnd: 2
       }}>
-
       </div>
     )
   }

@@ -1,18 +1,20 @@
 import React from "react";
 import Themes from "../../Theme";
 import "./style.scss";
-import {SoundCache, Sound} from "../.././sounds";
+import { SoundCache, Sound } from "../.././sounds";
 import Track from "../Track";
 
 interface Props {
-  soundCache: SoundCache
+  soundCache: SoundCache,
+  tracks: Sound[]
 };
 
 interface State {
   numMeasures: number,
   beatsPerMinute: number,
   beatsPerMeasure: number,
-  isCurrentlyPlaying: boolean
+  isCurrentlyPlaying: boolean,
+  tracks: Sound[]
 };
 
 export default class DrumMachine extends React.Component<Props, State>{
@@ -23,26 +25,25 @@ export default class DrumMachine extends React.Component<Props, State>{
       numMeasures: 4,
       beatsPerMinute: 90,
       beatsPerMeasure: 4,
-      isCurrentlyPlaying: false
+      isCurrentlyPlaying: false,
+      tracks: this.props.tracks
     }
   }
 
   private getTracks() {
-    const arr = [];
-    for (let i = 0; i < this.state.numMeasures; i++) {
-      arr.push((
+    return this.state.tracks.map((sound, index) => {
+      return (
         <Track
           soundCache={this.props.soundCache}
           isCurrentlyPlaying={this.state.isCurrentlyPlaying}
           amtMeasures={this.state.numMeasures}
           beatsPerMeasure={this.state.beatsPerMeasure}
-          sound={{category: "drum", sound: "drum1"}}
-          trackIndex={i}
-          key={i}
+          sound={sound}
+          trackIndex={index}
+          key={index}
         />
-      ));
-    }
-    return arr;
+      )
+    });
   }
   render() {
     const currentTheme = this.context
