@@ -21,6 +21,10 @@ export default class App extends React.Component<Props, State>{
               soundCache={new SoundCache()}
               tracks={[
                 { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
                 { category: "drums", sound: "drum1" }
               ]}></DrumMachine>
           </Grid>

@@ -2,6 +2,7 @@ import React from "react";
 import {SoundCache, Sound} from "../../sounds";
 import Measure from "../Measure";
 import Themes from "../../Theme";
+import TrackController from "../TrackController";
 import "./style.scss"
 
 interface Props {
@@ -10,7 +11,9 @@ interface Props {
   sound: Sound,
   amtMeasures: number,
   beatsPerMeasure: number,
-  trackIndex: number
+  trackIndex: number,
+  removeTrack: ()=>void,
+  changeTrack: (track: Sound)=>void
 }
 
 interface State {
@@ -42,6 +45,11 @@ export default class Track extends React.Component<Props, State>{
         gridColumnEnd: this.props.amtMeasures,
         border: this.context.trackBorder
       }}>
+      <TrackController
+      soundName={this.props.sound.sound}
+      changeTrack={this.props.changeTrack}
+      removeTrack={this.props.removeTrack}
+      />
         {this.getMeasures()}
       </div>
     )

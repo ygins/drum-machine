@@ -41,6 +41,8 @@ export default class DrumMachine extends React.Component<Props, State>{
           sound={sound}
           trackIndex={index}
           key={index}
+          removeTrack={() => this.setState({ tracks: this.state.tracks.splice(index, 1) })}
+          changeTrack={(track:Sound)=>this.setState({tracks: this.state.tracks.splice(index, 1, track)})}
         />
       )
     });

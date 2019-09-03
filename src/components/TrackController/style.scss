@@ -1,0 +1,33 @@
+
+.track-controller{
+  display: grid;
+  grid-template-rows: 20% 40% 40%;
+  grid-template-areas:
+  "title"
+  "change"
+  "remove"
+}
+.track-name{
+  grid-area: title/title/title/title;
+  margin: 20% auto;
+}
+
+.button{
+  margin: 5%;
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  border-radius: 15%;
+}
+.remove-button{
+  grid-area: remove/remove/remove/remove;
+}
+.change-button{
+  grid-area: change/change/change/change
+}
+
+.icon{
+  color: red;
+  font-size: 150%;
+  margin: auto auto;
+}
