@@ -1,7 +1,7 @@
 
 .track-controller{
   display: grid;
-  grid-template-rows: 20% 40% 40%;
+  grid-template-rows: 40% 30% 30%;
   grid-template-areas:
   "title"
   "change"
@@ -10,6 +10,7 @@
 .track-name{
   grid-area: title/title/title/title;
   margin: 20% auto;
+  font-size: auto;
 }
 
 .button{

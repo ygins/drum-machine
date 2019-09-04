@@ -25,6 +25,11 @@ export default class App extends React.Component<Props, State>{
                 { category: "drums", sound: "drum1" },
                 { category: "drums", sound: "drum1" },
                 { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
+                { category: "drums", sound: "drum1" },
                 { category: "drums", sound: "drum1" }
               ]}></DrumMachine>
           </Grid>

@@ -1,7 +1,7 @@
 #root-grid {
   display: grid;
-  grid-template-columns: 10% 20% 20% 20% 20% 10%;
-  grid-template-rows: 10% 20% 20% 20% 20% 10%;
+  grid-template-columns: 10% 20% 20% 20% 20% 10%; //Change 20's to auto HERE
+  grid-template-rows: 10% repeat(auto-fit, auto) 10%;
   height: auto;
   grid-auto-flow: row;
   grid-template-areas:

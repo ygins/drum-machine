@@ -16,7 +16,7 @@ interface State {
 }
 
 export default class TrackController extends React.Component<Props, State>{
-
+  
   render() {
     return (
       <div className="track-controller" style={{
