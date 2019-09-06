@@ -31,7 +31,7 @@ export default class Track extends React.Component<Props, State>{
     const arr = [];
     for (let i = 0; i < this.props.amtMeasures; i++) {
       arr.push((
-        <Measure amtBeats={this.props.beatsPerMeasure} key={i} index={i} />
+        <Measure amtBeats={this.props.beatsPerMeasure} key={i} index={i} noteIndex={this.state.currentPlayingIndex/4==i+1 ? this.state.currentPlayingIndex%4 : 0} />
       ));
     }
     return arr;

@@ -6,7 +6,8 @@ interface State {
 
 interface Props {
   amtBeats: number,
-  index: number
+  index: number,
+  noteIndex: number
 }
 
 
