@@ -24,14 +24,15 @@ export default class Track extends React.Component<Props, State>{
   static contextType = Themes.Context;
   constructor(props: Props) {
     super(props);
-    this.state = { currentPlayingIndex: 0 };
+    this.state = { currentPlayingIndex: -1 };
   }
 
   private getMeasures() {
     const arr = [];
     for (let i = 0; i < this.props.amtMeasures; i++) {
       arr.push((
-        <Measure amtBeats={this.props.beatsPerMeasure} key={i} index={i} noteIndex={this.state.currentPlayingIndex/4==i+1 ? this.state.currentPlayingIndex%4 : 0} />
+        <Measure amtBeats={this.props.beatsPerMeasure} key={i} index={i}
+        noteIndex={this.state.currentPlayingIndex==-1 ? -1 : this.state.currentPlayingIndex/4==i ? this.state.currentPlayingIndex%4 : -1} />
       ));
     }
     return arr;
