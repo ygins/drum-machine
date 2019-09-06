@@ -2,7 +2,6 @@ import React from 'react';
 import Themes from "./Theme";
 import DrumMachine from "./components/DrumMachine";
 import { SoundCache } from "./sounds";
-
 import "./App.scss";
 
 interface Props {
@@ -32,6 +31,7 @@ export default class App extends React.Component<Props, State>{
                 { category: "drums", sound: "drum1" },
                 { category: "drums", sound: "drum1" }
               ]}></DrumMachine>
+                      <p style={{gridArea: "header"}}>Hi!</p>
           </Grid>
         </Themes.Context.Provider>
       </div>
