@@ -1,5 +1,5 @@
 import React from "react";
-import Themes from "../../Theme";
+
 interface State {
 
 }
@@ -10,17 +10,21 @@ interface Props {
 }
 
 
-const Measure:React.FC<Props>=(props:Props)=>{
+export default class Measure extends React.Component<Props, State>{
+
+  constructor(props:Props){
+    super(props);
+  }
+
+  render() {
     return (
       <div className="measure" style={{
-        gridColumnStart: props.index+2,
-        gridColumnEnd: props.index+3,
+        gridColumnStart: this.props.index+1,
+        gridColumnEnd: this.props.index+2,
         gridRowStart:1,
-        gridRowEnd: 2,
-        border: React.useContext(Themes.Context).measureBorder
+        gridRowEnd: 2
       }}>
       </div>
     )
+  }
 }
-
-export default Measure;
