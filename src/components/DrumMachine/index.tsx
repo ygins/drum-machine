@@ -6,7 +6,8 @@ import Track from "../Track";
 
 interface Props {
   soundCache: SoundCache,
-  tracks: Sound[]
+  tracks: Sound[],
+  currentPlayingIndex: number
 };
 
 interface State {
@@ -14,7 +15,7 @@ interface State {
   beatsPerMinute: number,
   beatsPerMeasure: number,
   isCurrentlyPlaying: boolean,
-  tracks: Sound[]
+  tracks: Sound[],
 };
 
 export default class DrumMachine extends React.Component<Props, State>{
@@ -43,6 +44,7 @@ export default class DrumMachine extends React.Component<Props, State>{
           key={index}
           removeTrack={() => this.setState({ tracks: this.state.tracks.splice(index, 1) })}
           changeTrack={(track:Sound)=>this.setState({tracks: this.state.tracks.splice(index, 1, track)})}
+          currentPlayingIndex={this.props.currentPlayingIndex}
         />
       )
     });

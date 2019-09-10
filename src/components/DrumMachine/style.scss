@@ -3,6 +3,6 @@
   grid-area: drum;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto;
+  grid-template-rows: repeat(auto-fill, 100px);
   height: auto;
 }

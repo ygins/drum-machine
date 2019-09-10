@@ -1,5 +1,5 @@
 import React from "react";
-import {SoundCache, Sound} from "../../sounds";
+import { SoundCache, Sound } from "../../sounds";
 import Measure from "../Measure";
 import Themes from "../../Theme";
 import TrackController from "../TrackController";
@@ -12,27 +12,51 @@ interface Props {
   amtMeasures: number,
   beatsPerMeasure: number,
   trackIndex: number,
-  removeTrack: ()=>void,
-  changeTrack: (track: Sound)=>void
+  removeTrack: () => void,
+  changeTrack: (track: Sound) => void,
+  currentPlayingIndex: number
 }
 
 interface State {
-  currentPlayingIndex: number
+  howl: () => Howl | null
 }
 
 export default class Track extends React.Component<Props, State>{
   static contextType = Themes.Context;
   constructor(props: Props) {
     super(props);
-    this.state = { currentPlayingIndex: -1 };
+    this.state={howl:()=>null}
+    this.howlFrom(props.sound).then(howl => this.setState({ howl: howl }));
+  }
+
+  private async howlFrom(sound: Sound) {
+    const howl = await this.props.soundCache.getSound(sound);
+    if (!howl) {
+      throw new Error("Invalid sound!");
+    }
+    else {
+      return howl;
+    }
   }
 
   private getMeasures() {
-    const arr = [];
+    const arr:JSX.Element[] = [];
+    if(!this.state.howl()){
+      return arr;
+    }
+    const noteIndexFrom=(measureIndex:number)=>{
+      if(this.props.currentPlayingIndex==-1){
+        return -1;
+      }
+      const currentMeasure=Math.floor(this.props.currentPlayingIndex/this.props.beatsPerMeasure);
+      console.log("Current measure is "+currentMeasure);
+      return measureIndex===currentMeasure ? this.props.currentPlayingIndex%this.props.beatsPerMeasure:-1;
+    }
     for (let i = 0; i < this.props.amtMeasures; i++) {
       arr.push((
-        <Measure amtBeats={this.props.beatsPerMeasure} key={i} index={i}
-        noteIndex={this.state.currentPlayingIndex==-1 ? -1 : this.state.currentPlayingIndex/4==i ? this.state.currentPlayingIndex%4 : -1} />
+        <Measure amtBeats={this.props.beatsPerMeasure} key={i} measureIndex={i}
+          howlProvider={()=>(this.state.howl() as Howl)}
+          noteIndex={noteIndexFrom(i)} />
       ));
     }
     return arr;
@@ -46,12 +70,12 @@ export default class Track extends React.Component<Props, State>{
         gridColumnEnd: this.props.amtMeasures,
         border: this.context.trackBorder
       }}>
-      <TrackController
-      soundName={this.props.sound.sound}
-      changeTrack={this.props.changeTrack}
-      removeTrack={this.props.removeTrack}
-      />
-        {this.getMeasures()}
+        <TrackController
+          soundName={this.props.sound.sound}
+          changeTrack={this.props.changeTrack}
+          removeTrack={this.props.removeTrack}
+        />
+        {this.state.howl() ? this.getMeasures() : <p>Loading...</p>}
       </div>
     )
   }
