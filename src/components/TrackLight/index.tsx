@@ -3,9 +3,9 @@ import "./style.scss";
 import { Howl } from "howler";
 
 interface Props {
-  highlight: boolean,
   indexInMeasure: number,
-  howlProvider: () => Howl
+  howlProvider: () => Howl,
+  onNote: boolean
 }
 
 interface State {
@@ -17,12 +17,13 @@ class TrackLight extends React.Component<Props, State>{
     this.state = { selected: false };
   }
   render() {
-    if (this.props.highlight) {
+    const shouldPlay=this.state.selected && this.props.onNote;
+    if (shouldPlay) {
       this.props.howlProvider().play();
     }
     return (
       <div className="track-light" style={{
-        backgroundColor: this.props.highlight ? "red" : this.state.selected ? "white" : "transparent",
+        backgroundColor: shouldPlay ? "red" : this.state.selected ? "white" : "transparent",
         gridColumnStart: this.props.indexInMeasure + 1,
         gridColumnEnd: this.props.indexInMeasure + 2
       }}

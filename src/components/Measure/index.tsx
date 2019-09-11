@@ -27,7 +27,7 @@ export default class Measure extends React.Component<Props, State>{
     const trackLights=[];
     for(let i=0; i<this.props.amtBeats; i++){
       trackLights.push((
-        <TrackLight indexInMeasure={i} key={i} highlight={this.props.noteIndex===i}
+        <TrackLight indexInMeasure={i} key={i} onNote={this.props.noteIndex===i}
         howlProvider={this.props.howlProvider} >
         </TrackLight>
       ))
