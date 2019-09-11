@@ -8,54 +8,36 @@ interface Props {
   soundCache: SoundCache
 };
 interface State {
-  isCurrentlyPlaying: boolean;
-  currentPlayingIndex: number;
 };
 
 export default class MyApp extends React.Component<Props, State>{
 
   constructor(props: Props) {
     super(props);
-    this.state={
-      isCurrentlyPlaying: false,
-      currentPlayingIndex: -1
-    }
-    window.addEventListener("keydown",(ev: KeyboardEvent)=>{
-      if(ev.keyCode===80){
-        const newState={...this.state};
-        newState.isCurrentlyPlaying=true;
-        this.setState(newState);
-        const task=setInterval(()=>{
-          this.setState({
-            ...this.state,
-            currentPlayingIndex: this.state.currentPlayingIndex+1
-          })
-        },500);
-      }
-    });
+  }
+
+  private getSounds(){
+    return [
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+        { category: "drums", sound: "drum1" },
+          { category: "drums", sound: "drum1" },
+            { category: "drums", sound: "drum1" }
+    ]
   }
 
   render() {
-    const body = document.body;
-    const html = document.documentElement;
-    const height = Math.max( body.scrollHeight, body.offsetHeight,
-                       html.clientHeight, html.scrollHeight, html.offsetHeight );
     return (
-      <div className="DrumMachineApp" style={{
-        height: `${height}px`
-      }}>
+      <div className="DrumMachineApp">
         <Themes.Context.Provider value={Themes.THEMES.DEFAULT}>
           <Grid>
             <DrumMachine
               soundCache={this.props.soundCache}
-              currentPlayingIndex={this.state.currentPlayingIndex}
-              tracks={[
-                { category: "drums", sound: "drum1" },
-                { category: "drums", sound: "drum1" },
-                { category: "drums", sound: "drum1" },
-                { category: "drums", sound: "drum1" },
-                { category: "drums", sound: "drum1" }
-              ]}></DrumMachine>
+              tracks={this.getSounds()}>
+            </DrumMachine>
             <p style={{ gridArea: "header" }}>Hi!</p>
           </Grid>
         </Themes.Context.Provider>
