@@ -6,16 +6,18 @@ import Track from "../Track";
 
 interface Props {
   soundCache: SoundCache,
-  tracks: Sound[]
+  tracks: Sound[],
+  playing: boolean,
+  setPlaying: (playing: boolean)=>void
 };
 
 interface State {
   numMeasures: number,
   beatsPerMinute: number,
   beatsPerMeasure: number,
-  isCurrentlyPlaying: boolean,
-  currentPlayingIndex: number
+  currentPlayingIndex: number,
   tracks: Sound[],
+  task?: number
 };
 
 export default class DrumMachine extends React.Component<Props, State>{
@@ -24,40 +26,51 @@ export default class DrumMachine extends React.Component<Props, State>{
     super(props);
     this.state = {
       numMeasures: 4,
-      beatsPerMinute: 90,
-      beatsPerMeasure: 4,
-      isCurrentlyPlaying: false,
+      beatsPerMinute: 260,
+      beatsPerMeasure: 5,
       tracks: this.props.tracks,
       currentPlayingIndex: -1
     }
-    window.addEventListener("keydown",(ev: KeyboardEvent)=>{
-      if(ev.keyCode===80){
-        const newState={...this.state};
-        newState.isCurrentlyPlaying=true;
-        this.setState(newState);
-        const task=setInterval(()=>{
-          this.setState({
-            ...this.state,
-            currentPlayingIndex: this.state.currentPlayingIndex===(this.state.numMeasures*this.state.beatsPerMeasure)-1 ? 0:this.state.currentPlayingIndex+1
-          })
-        },250);
+    window.addEventListener("keydown", (ev: KeyboardEvent) => {
+      if (ev.keyCode === 80) {
+        this.togglePlaying();
       }
     });
   }
-
+  private togglePlaying() {
+    if (this.props.playing) {
+      const task = this.state.task;
+      if (task) {
+        window.clearTimeout(task);
+        this.setState({
+          currentPlayingIndex: -1,
+          task: undefined
+        });
+        this.props.setPlaying(false);
+      }
+    } else {
+      const task = window.setInterval(() => {
+        this.setState({
+          currentPlayingIndex: this.state.currentPlayingIndex === (this.state.numMeasures * this.state.beatsPerMeasure) - 1 ? 0 : this.state.currentPlayingIndex + 1,
+          task: task,
+        });
+      }, 60000 / this.state.beatsPerMinute);
+      this.props.setPlaying(true);
+    }
+  }
   private getTracks() {
     return this.state.tracks.map((sound, index) => {
       return (
         <Track
           soundCache={this.props.soundCache}
-          isCurrentlyPlaying={this.state.isCurrentlyPlaying}
+          isCurrentlyPlaying={this.props.playing}
           amtMeasures={this.state.numMeasures}
           beatsPerMeasure={this.state.beatsPerMeasure}
           sound={sound}
           trackIndex={index}
           key={index}
           removeTrack={() => this.setState({ tracks: this.state.tracks.splice(index, 1) })}
-          changeTrack={(track:Sound)=>this.setState({tracks: this.state.tracks.splice(index, 1, track)})}
+          changeTrack={(track: Sound) => this.setState({ tracks: this.state.tracks.splice(index, 1, track) })}
           currentPlayingIndex={this.state.currentPlayingIndex}
         />
       )

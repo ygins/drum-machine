@@ -8,24 +8,26 @@ interface Props {
   soundCache: SoundCache
 };
 interface State {
+  playing: boolean
 };
 
 export default class MyApp extends React.Component<Props, State>{
 
   constructor(props: Props) {
     super(props);
+    this.state = { playing: false };
   }
 
-  private getSounds(){
+  private getSounds() {
     return [
       { category: "drums", sound: "drum1" },
       { category: "drums", sound: "drum1" },
       { category: "drums", sound: "drum1" },
       { category: "drums", sound: "drum1" },
       { category: "drums", sound: "drum1" },
-        { category: "drums", sound: "drum1" },
-          { category: "drums", sound: "drum1" },
-            { category: "drums", sound: "drum1" }
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" }
     ]
   }
 
@@ -33,16 +35,49 @@ export default class MyApp extends React.Component<Props, State>{
     return (
       <div className="DrumMachineApp">
         <Themes.Context.Provider value={Themes.THEMES.DEFAULT}>
+          <this.Controller />
           <Grid>
             <DrumMachine
               soundCache={this.props.soundCache}
-              tracks={this.getSounds()}>
+              tracks={this.getSounds()}
+              playing={this.state.playing}
+              setPlaying={(playing: boolean) => {
+                this.setState({ playing: playing });
+              }}
+            >
             </DrumMachine>
             <p style={{ gridArea: "header" }}>Hi!</p>
           </Grid>
         </Themes.Context.Provider>
       </div>
     );
+  }
+  readonly Controller: React.FC = () => {
+    const [showing, setShowing] = React.useState(false);
+    const getShowButton = () => (
+      <div className="show-button"
+        onClick={() => setShowing(!showing)}>
+      </div>
+    )
+    const getPlayButton = () => (
+      <div className="play-button"
+        onClick={()=>this.setState({playing: !this.state.playing})}>
+      </div>
+    )
+    if (showing) {
+      return (
+        <div className="play-controller controller">
+          {getPlayButton()}
+          {getShowButton()}
+        </div>
+      )
+    } else {
+      return (
+        <div className="hidden-play-controller controller">
+          {getShowButton()}
+        </div>
+      )
+    }
   }
 }
 
