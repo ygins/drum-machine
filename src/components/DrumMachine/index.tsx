@@ -6,9 +6,8 @@ import Track from "../Track";
 
 interface Props {
   soundCache: SoundCache,
-  tracks: Sound[],
   playing: boolean,
-  setPlaying: (playing: boolean)=>void
+  setPlaying: (playing: boolean) => void
 };
 
 interface State {
@@ -28,7 +27,7 @@ export default class DrumMachine extends React.Component<Props, State>{
       numMeasures: 4,
       beatsPerMinute: 260,
       beatsPerMeasure: 5,
-      tracks: this.props.tracks,
+      tracks: this.getSounds(),
       currentPlayingIndex: -1
     }
     window.addEventListener("keydown", (ev: KeyboardEvent) => {
@@ -37,8 +36,20 @@ export default class DrumMachine extends React.Component<Props, State>{
       }
     });
   }
-  componentDidUpdate(prevProps: Props){
-    if(prevProps.playing != this.props.playing){
+  private getSounds() {
+    return [
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" },
+      { category: "drums", sound: "drum1" }
+    ]
+  }
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.playing != this.props.playing) {
       this.togglePlaying(this.props.playing);
     }
   }
@@ -73,7 +84,14 @@ export default class DrumMachine extends React.Component<Props, State>{
           sound={sound}
           trackIndex={index}
           key={index}
-          removeTrack={() => this.setState({ tracks: this.state.tracks.splice(index, 1) })}
+          removeTrack={() => {
+            if(this.state.tracks.length==1){
+              return;
+            }
+            const newTracks = this.state.tracks.slice(0);
+            newTracks.splice(index, 1);
+            this.setState({ tracks: newTracks });
+          }}
           changeTrack={(track: Sound) => this.setState({ tracks: this.state.tracks.splice(index, 1, track) })}
           currentPlayingIndex={this.state.currentPlayingIndex}
         />

@@ -20,18 +20,6 @@ export default class MyApp extends React.Component<Props, State>{
     this.state = { playing: false };
   }
 
-  private getSounds() {
-    return [
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" }
-    ]
-  }
 
   render() {
     return (
@@ -41,7 +29,6 @@ export default class MyApp extends React.Component<Props, State>{
           <Grid>
             <DrumMachine
               soundCache={this.props.soundCache}
-              tracks={this.getSounds()}
               playing={this.state.playing}
               setPlaying={(playing: boolean) => {
                 console.log("Playing to "+playing);
