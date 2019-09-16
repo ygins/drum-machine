@@ -2,6 +2,8 @@ import React from 'react';
 import Themes from "./Theme";
 import DrumMachine from "./components/DrumMachine";
 import { SoundCache } from "./sounds";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCaretLeft, faCaretRight, faPlayCircle, faStop} from "@fortawesome/free-solid-svg-icons";
 import "./App.scss";
 
 interface Props {
@@ -47,7 +49,6 @@ export default class MyApp extends React.Component<Props, State>{
               }}
             >
             </DrumMachine>
-            <p style={{ gridArea: "header" }}>Hi!</p>
           </Grid>
         </Themes.Context.Provider>
       </div>
@@ -58,11 +59,13 @@ export default class MyApp extends React.Component<Props, State>{
     const getShowButton = () => (
       <div className="show-button"
         onClick={() => setShowing(!showing)}>
+        <FontAwesomeIcon icon={!showing ? faCaretRight:faCaretLeft}/>
       </div>
     )
     const getPlayButton = () => (
       <div className="play-button"
         onClick={()=>this.setState({playing: !this.state.playing})}>
+        <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop}/>
       </div>
     )
     if (showing) {
