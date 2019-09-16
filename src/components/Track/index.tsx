@@ -49,7 +49,6 @@ export default class Track extends React.Component<Props, State>{
         return -1;
       }
       const currentMeasure=Math.floor(this.props.currentPlayingIndex/this.props.beatsPerMeasure);
-      console.log("Current measure is "+currentMeasure);
       return measureIndex===currentMeasure ? this.props.currentPlayingIndex%this.props.beatsPerMeasure:-1;
     }
     for (let i = 0; i < this.props.amtMeasures; i++) {

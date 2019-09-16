@@ -42,6 +42,7 @@ export default class MyApp extends React.Component<Props, State>{
               tracks={this.getSounds()}
               playing={this.state.playing}
               setPlaying={(playing: boolean) => {
+                console.log("Playing to "+playing);
                 this.setState({ playing: playing });
               }}
             >

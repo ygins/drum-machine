@@ -33,12 +33,18 @@ export default class DrumMachine extends React.Component<Props, State>{
     }
     window.addEventListener("keydown", (ev: KeyboardEvent) => {
       if (ev.keyCode === 80) {
-        this.togglePlaying();
+        this.props.setPlaying(!this.props.playing);
       }
     });
   }
-  private togglePlaying() {
-    if (this.props.playing) {
+  componentDidUpdate(prevProps: Props){
+    if(prevProps.playing != this.props.playing){
+      this.togglePlaying(this.props.playing);
+    }
+  }
+
+  private togglePlaying(start: boolean) {
+    if (!start) {
       const task = this.state.task;
       if (task) {
         window.clearTimeout(task);
@@ -46,7 +52,6 @@ export default class DrumMachine extends React.Component<Props, State>{
           currentPlayingIndex: -1,
           task: undefined
         });
-        this.props.setPlaying(false);
       }
     } else {
       const task = window.setInterval(() => {
@@ -55,7 +60,6 @@ export default class DrumMachine extends React.Component<Props, State>{
           task: task,
         });
       }, 60000 / this.state.beatsPerMinute);
-      this.props.setPlaying(true);
     }
   }
   private getTracks() {
