@@ -7,7 +7,8 @@ import Track from "../Track";
 interface Props {
   soundCache: SoundCache,
   playing: boolean,
-  setPlaying: (playing: boolean) => void
+  setPlaying: (playing: boolean) => void,
+  updateAppWidth : ()=>void
 };
 
 interface State {
@@ -26,7 +27,7 @@ export default class DrumMachine extends React.Component<Props, State>{
     this.state = {
       numMeasures: 4,
       beatsPerMinute: 260,
-      beatsPerMeasure: 5,
+      beatsPerMeasure: 4,
       tracks: this.getSounds(),
       currentPlayingIndex: -1
     }
@@ -39,12 +40,6 @@ export default class DrumMachine extends React.Component<Props, State>{
   private getSounds() {
     return [
       { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" },
       { category: "drums", sound: "drum1" }
     ]
   }
@@ -52,6 +47,11 @@ export default class DrumMachine extends React.Component<Props, State>{
     if (prevProps.playing != this.props.playing) {
       this.togglePlaying(this.props.playing);
     }
+      this.props.updateAppWidth();
+  }
+
+  componentDidMount(){
+    this.props.updateAppWidth();
   }
 
   private togglePlaying(start: boolean) {

@@ -3,27 +3,28 @@ import Themes from "./Theme";
 import DrumMachine from "./components/DrumMachine";
 import { SoundCache } from "./sounds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCaretLeft, faCaretRight, faPlayCircle, faStop} from "@fortawesome/free-solid-svg-icons";
+import { faCaretLeft, faCaretRight, faPlayCircle, faStop } from "@fortawesome/free-solid-svg-icons";
 import "./App.scss";
 
 interface Props {
   soundCache: SoundCache
 };
 interface State {
-  playing: boolean
+  playing: boolean,
+  appHeight: number
 };
 
 export default class MyApp extends React.Component<Props, State>{
 
   constructor(props: Props) {
     super(props);
-    this.state = { playing: false };
+    this.state = { playing: false, appHeight: 0 };
   }
 
 
   render() {
     return (
-      <div className="DrumMachineApp">
+      <div className="DrumMachineApp" style={{ height: `${this.state.appHeight}px` }}>
         <Themes.Context.Provider value={Themes.THEMES.DEFAULT}>
           <this.Controller />
           <Grid>
@@ -31,8 +32,15 @@ export default class MyApp extends React.Component<Props, State>{
               soundCache={this.props.soundCache}
               playing={this.state.playing}
               setPlaying={(playing: boolean) => {
-                console.log("Playing to "+playing);
+                console.log("Playing to " + playing);
                 this.setState({ playing: playing });
+              }}
+              updateAppWidth={() => {
+                const windowHeight = Math.max(document.body.scrollHeight, window.outerHeight);
+                const toSet = Math.max(windowHeight, this.state.appHeight);
+                if (this.state.appHeight != toSet) {
+                  this.setState({ appHeight: toSet });
+                }
               }}
             >
             </DrumMachine>
@@ -46,13 +54,13 @@ export default class MyApp extends React.Component<Props, State>{
     const getShowButton = () => (
       <div className="show-button"
         onClick={() => setShowing(!showing)}>
-        <FontAwesomeIcon icon={!showing ? faCaretRight:faCaretLeft}/>
+        <FontAwesomeIcon icon={!showing ? faCaretRight : faCaretLeft} />
       </div>
     )
     const getPlayButton = () => (
       <div className="play-button"
-        onClick={()=>this.setState({playing: !this.state.playing})}>
-        <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop}/>
+        onClick={() => this.setState({ playing: !this.state.playing })}>
+        <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop} />
       </div>
     )
     if (showing) {
