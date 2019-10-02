@@ -32,7 +32,6 @@ export default class MyApp extends React.Component<Props, State>{
               soundCache={this.props.soundCache}
               playing={this.state.playing}
               setPlaying={(playing: boolean) => {
-                console.log("Playing to " + playing);
                 this.setState({ playing: playing });
               }}
               updateAppWidth={() => {

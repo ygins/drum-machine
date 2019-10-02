@@ -3,11 +3,11 @@ import { Howl } from "howler";
 type HowlProvider = () => Howl
 
 export class SoundCache {
-  private readonly sounds: Map<string, string[]>;
+  private readonly allSounds: Map<string, string[]>;
   private readonly cache: WeakMap<String, WeakMap<String, Howl>> = new Map();
 
   constructor(sounds: Map<string, string[]>) {
-    this.sounds = sounds;
+    this.allSounds = sounds;
   }
   public static async create(): Promise<SoundCache> {
     const sounds = new Map<string, string[]>();
@@ -32,7 +32,7 @@ export class SoundCache {
     });
   }
   public async get(category: string, sound: string): Promise<HowlProvider | undefined> {
-    const categoryArr = this.sounds.get(category);
+    const categoryArr = this.allSounds.get(category);
     if (!categoryArr) {
       return undefined;
     }
@@ -46,9 +46,31 @@ export class SoundCache {
     return () => howl;
   }
 
+  public dump(sound: Sound){
+    const categoryMap=this.cache.get(sound.category);
+    if(!categoryMap){
+      return;
+    }
+    categoryMap.delete(sound.sound);
+  }
+
   public async getSound(sound: Sound): Promise<HowlProvider | undefined> {
     return await this.get(sound.category, sound.sound);
   }
+
+  public getSoundsFromCategory(category: string) {
+    return this.allSounds.get(category);
+  }
+
+  get categories() {
+    return this.allSounds.keys();
+  }
+
+  get sounds() {
+    return this.allSounds.values();
+  }
+
+
 }
 
 export interface Sound {

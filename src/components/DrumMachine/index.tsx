@@ -8,7 +8,7 @@ interface Props {
   soundCache: SoundCache,
   playing: boolean,
   setPlaying: (playing: boolean) => void,
-  updateAppWidth : ()=>void
+  updateAppWidth: () => void
 };
 
 interface State {
@@ -22,6 +22,8 @@ interface State {
 
 export default class DrumMachine extends React.Component<Props, State>{
   static contextType = Themes.Context;
+  private maybeDumps: Sound[] = [];
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -39,18 +41,27 @@ export default class DrumMachine extends React.Component<Props, State>{
   }
   private getSounds() {
     return [
-      { category: "drums", sound: "drum1" },
-      { category: "drums", sound: "drum1" }
+      { category: "Acoustic", sound: "ClHat-01" },
+      { category: "Acoustic", sound: "Crash-02" },
+      { category: "Acoustic", sound: "Tom-04" }
     ]
   }
+
   componentDidUpdate(prevProps: Props) {
+    this.maybeDumps.forEach(soundToDump => {
+      if (!this.state.tracks.find(it => it == soundToDump)) {
+        this.props.soundCache.dump(soundToDump);
+      }
+    });
+    this.maybeDumps.length = 0;
+
     if (prevProps.playing != this.props.playing) {
       this.togglePlaying(this.props.playing);
     }
-      this.props.updateAppWidth();
+    this.props.updateAppWidth();
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.updateAppWidth();
   }
 
@@ -85,14 +96,20 @@ export default class DrumMachine extends React.Component<Props, State>{
           trackIndex={index}
           key={index}
           removeTrack={() => {
-            if(this.state.tracks.length==1){
+            if (this.state.tracks.length == 1) {
               return;
             }
-            const newTracks = this.state.tracks.slice(0);
-            newTracks.splice(index, 1);
+            const newTracks = this.state.tracks.slice();
+            const deleted = newTracks.splice(index, 1);
             this.setState({ tracks: newTracks });
+            this.maybeDumps.push(deleted[0]);
           }}
-          changeTrack={(track: Sound) => this.setState({ tracks: this.state.tracks.splice(index, 1, track) })}
+          changeTrack={(track: Sound) => {
+            const newTracks = this.state.tracks.slice();
+            const deleted = newTracks.splice(index, 1, track);
+            this.setState({ tracks: newTracks });
+            this.maybeDumps.push(deleted[0]);
+          }}
           currentPlayingIndex={this.state.currentPlayingIndex}
         />
       )

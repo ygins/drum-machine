@@ -39,6 +39,20 @@ export default class Track extends React.Component<Props, State>{
     }
   }
 
+  private updateSound(){
+    this.howlFrom(this.props.sound).then(howl=>this.setState({howl: howl}));
+  }
+
+  componentDidMount(){
+    this.updateSound();
+  }
+
+  componentDidUpdate(props: Props){
+    if(props.sound!=this.props.sound){
+      this.updateSound();
+    }
+  }
+
   private getMeasures() {
     const arr:JSX.Element[] = [];
     if(!this.state.howl()){
@@ -70,7 +84,8 @@ export default class Track extends React.Component<Props, State>{
         border: this.context.trackBorder
       }}>
         <TrackController
-          soundName={this.props.sound.sound}
+          soundCache={this.props.soundCache}
+          sound={this.props.sound}
           changeTrack={this.props.changeTrack}
           removeTrack={this.props.removeTrack}
         />
