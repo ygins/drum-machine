@@ -43,24 +43,17 @@ export class SoundCache {
     if (categoryArr.indexOf(sound) === -1) {
       return undefined;
     }
-    console.log(this.cache.get(category));
-    console.log("------");
     let howlMap=new Map();
     const result=this.cache.get(category);
     if (result) {
-      console.log("Yus");
       howlMap = result;
     }
-    console.log(howlMap.get(sound))
     const howl = howlMap.get(sound) || await this.pull(category, sound);
     howlMap.set(sound, howl);
-    console.log(`Set ${sound} to a howl`);
-    console.log(this.cache);
     return () => howl;
   }
 
   public dump(sound: Sound) {
-    console.log("Dumping!")
     const categoryMap = this.cache.get(sound.category);
     if (!categoryMap) {
       return;
