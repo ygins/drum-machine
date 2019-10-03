@@ -3,6 +3,8 @@ import Themes from "../../Theme";
 import "./style.scss";
 import { SoundCache, Sound } from "../.././sounds";
 import Track from "../Track";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
   soundCache: SoundCache,
@@ -116,13 +118,26 @@ export default class DrumMachine extends React.Component<Props, State>{
     });
   }
   render() {
-    const currentTheme = this.context
+    const currentTheme = this.context;
+    const addNewTrack = () => {
+      const newArr = this.state.tracks.slice();
+      newArr.push({category: "Acoustic", sound: "Tom-04"});
+      this.setState({ tracks: newArr });
+    }
     return (
       <div id="frame" style={{
         backgroundColor: currentTheme.machine,
         border: currentTheme.border
       }}>
         {this.getTracks()}
+        <div className="add-icon-container" style={{
+          gridRowStart: this.state.tracks.length,
+          gridRowEnd: this.state.tracks.length + 1,
+          gridColumnStart: 1,
+          gridColumnEnd: this.state.numMeasures
+        }} onClick={addNewTrack}>
+          <FontAwesomeIcon className="add-icon" icon={faPlusCircle} />
+        </div>
       </div>
     )
   }

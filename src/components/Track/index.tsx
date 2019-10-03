@@ -26,7 +26,7 @@ export default class Track extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
     this.state={howl:()=>null}
-    this.howlFrom(props.sound).then(howl => this.setState({ howl: howl }));
+    this.updateSound();
   }
 
   private async howlFrom(sound: Sound) {

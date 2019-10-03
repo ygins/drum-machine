@@ -6,3 +6,19 @@
   grid-template-rows: repeat(auto-fill, auto);
   height: auto;
 }
+
+.add-icon{
+  font-size: 150%;
+  justify-content: center;
+  align-self: center;
+  grid-area: "icon";
+  margin: 10px auto 10px auto;
+}
+
+.add-icon-container{
+  height: 100%;
+  width: 100%;
+  align-self: center;
+  display: grid;
+  grid-template-areas: "icon"
+}

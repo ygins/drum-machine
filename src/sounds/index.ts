@@ -4,10 +4,13 @@ type HowlProvider = () => Howl
 
 export class SoundCache {
   private readonly allSounds: Map<string, string[]>;
-  private readonly cache: WeakMap<String, WeakMap<String, Howl>> = new Map();
+  private readonly cache: Map<string, Map<string, Howl>> = new Map();
 
   constructor(sounds: Map<string, string[]>) {
     this.allSounds = sounds;
+    sounds.forEach((value: string[], key: string)=>{
+      this.cache.set(key, new Map());
+    })
   }
   public static async create(): Promise<SoundCache> {
     const sounds = new Map<string, string[]>();
@@ -31,6 +34,7 @@ export class SoundCache {
       howlObj.once("loaderror", (soundId: number, err: any) => reject("Error loading howl! " + err));
     });
   }
+
   public async get(category: string, sound: string): Promise<HowlProvider | undefined> {
     const categoryArr = this.allSounds.get(category);
     if (!categoryArr) {
@@ -39,16 +43,26 @@ export class SoundCache {
     if (categoryArr.indexOf(sound) === -1) {
       return undefined;
     }
-    const howlMap = this.cache.get(category) || new Map();
+    console.log(this.cache.get(category));
+    console.log("------");
+    let howlMap=new Map();
+    const result=this.cache.get(category);
+    if (result) {
+      console.log("Yus");
+      howlMap = result;
+    }
+    console.log(howlMap.get(sound))
     const howl = howlMap.get(sound) || await this.pull(category, sound);
     howlMap.set(sound, howl);
-    this.cache.set(category, howlMap);
+    console.log(`Set ${sound} to a howl`);
+    console.log(this.cache);
     return () => howl;
   }
 
-  public dump(sound: Sound){
-    const categoryMap=this.cache.get(sound.category);
-    if(!categoryMap){
+  public dump(sound: Sound) {
+    console.log("Dumping!")
+    const categoryMap = this.cache.get(sound.category);
+    if (!categoryMap) {
       return;
     }
     categoryMap.delete(sound.sound);
