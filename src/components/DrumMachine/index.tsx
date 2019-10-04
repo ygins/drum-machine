@@ -24,7 +24,6 @@ interface State {
 
 export default class DrumMachine extends React.Component<Props, State>{
   static contextType = Themes.Context;
-  private maybeDumps: Sound[] = [];
 
   constructor(props: Props) {
     super(props);
@@ -49,14 +48,7 @@ export default class DrumMachine extends React.Component<Props, State>{
     ]
   }
 
-  componentDidUpdate(prevProps: Props) {
-    this.maybeDumps.forEach(soundToDump => {
-      if (!this.state.tracks.find(it => it == soundToDump)) {
-        this.props.soundCache.dump(soundToDump);
-      }
-    });
-    this.maybeDumps.length = 0;
-
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.playing != this.props.playing) {
       this.togglePlaying(this.props.playing);
     }
@@ -104,13 +96,11 @@ export default class DrumMachine extends React.Component<Props, State>{
             const newTracks = this.state.tracks.slice();
             const deleted = newTracks.splice(index, 1);
             this.setState({ tracks: newTracks });
-            this.maybeDumps.push(deleted[0]);
           }}
           changeTrack={(track: Sound) => {
             const newTracks = this.state.tracks.slice();
             const deleted = newTracks.splice(index, 1, track);
             this.setState({ tracks: newTracks });
-            this.maybeDumps.push(deleted[0]);
           }}
           currentPlayingIndex={this.state.currentPlayingIndex}
         />
@@ -121,7 +111,7 @@ export default class DrumMachine extends React.Component<Props, State>{
     const currentTheme = this.context;
     const addNewTrack = () => {
       const newArr = this.state.tracks.slice();
-      newArr.push({category: "Acoustic", sound: "Tom-04"});
+      newArr.push({ category: "Acoustic", sound: "Tom-04" });
       this.setState({ tracks: newArr });
     }
     return (

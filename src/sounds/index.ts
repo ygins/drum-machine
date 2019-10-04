@@ -53,14 +53,6 @@ export class SoundCache {
     return () => howl;
   }
 
-  public dump(sound: Sound) {
-    const categoryMap = this.cache.get(sound.category);
-    if (!categoryMap) {
-      return;
-    }
-    categoryMap.delete(sound.sound);
-  }
-
   public async getSound(sound: Sound): Promise<HowlProvider | undefined> {
     return await this.get(sound.category, sound.sound);
   }
