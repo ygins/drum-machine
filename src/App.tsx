@@ -4,7 +4,7 @@ import DrumMachine from "./components/DrumMachine";
 import { SoundCache } from "./sounds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight, faPlayCircle, faStop } from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons"
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import "./App.scss";
 
 interface Props {
@@ -14,14 +14,21 @@ interface State {
   playing: boolean,
   appHeight: number,
   beatsPerMinute: number,
-  beatsPerMeasure: number
+  beatsPerMeasure: number,
+  amtMeasures: number
 };
 
 export default class MyApp extends React.Component<Props, State>{
 
   constructor(props: Props) {
     super(props);
-    this.state = { playing: false, appHeight: 0, beatsPerMinute: 90, beatsPerMeasure: 4 };
+    this.state = {
+      playing: false,
+      appHeight: 0,
+      beatsPerMinute: 90,
+      beatsPerMeasure: 4,
+      amtMeasures: 4
+    };
   }
 
 
@@ -36,6 +43,7 @@ export default class MyApp extends React.Component<Props, State>{
               playing={this.state.playing}
               beatsPerMinute={this.state.beatsPerMinute}
               beatsPerMeasure={this.state.beatsPerMeasure}
+              numMeasures={this.state.amtMeasures}
               setPlaying={(playing: boolean) => {
                 this.setState({ playing: playing });
               }}
@@ -48,7 +56,7 @@ export default class MyApp extends React.Component<Props, State>{
               }}
             >
             </DrumMachine>
-            <Footer />
+            <RightBar />
           </Grid>
         </Themes.Context.Provider>
       </div>
@@ -100,8 +108,9 @@ export default class MyApp extends React.Component<Props, State>{
         <div className="play-controller controller">
           {getPlayButton()}
           {getShowButton()}
-          {numberInput("bpm", 10, 360, 90, (app, val) => app.setState({ beatsPerMinute: val }))}
-          {numberInput("beats", 2, 8, 4, (app, val) => app.setState({ beatsPerMeasure: val }))}
+          {numberInput("bpm", 10, 360, this.state.beatsPerMinute, (app, val) => app.setState({ beatsPerMinute: val }))}
+          {numberInput("beats", 2, 8, this.state.beatsPerMeasure, (app, val) => app.setState({ beatsPerMeasure: val }))}
+          {numberInput("measures", 2, 16, this.state.amtMeasures, (app, val) => app.setState({ amtMeasures: val }))}
         </div>
       )
     } else {
@@ -123,8 +132,15 @@ const Grid: React.FC = (props: any) => {
   )
 }
 
-const Footer: React.FC = () => (
-  <div id="footer">
-    <FontAwesomeIcon className="github-icon" icon={faGithub} />
-  </div>
-)
+const RightBar: React.FC = () => {
+  const githubLink = require("./options.json").githubLink;
+  return (
+    <div id="right">
+      <div onClick={() => {
+        window.open(githubLink, "_blank");
+      }}>
+        <FontAwesomeIcon className="github-icon" icon={faGithub} />
+      </div>
+    </div>
+  )
+}

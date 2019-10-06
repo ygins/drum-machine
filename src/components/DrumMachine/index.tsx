@@ -11,12 +11,12 @@ interface Props {
   playing: boolean,
   setPlaying: (playing: boolean) => void,
   updateAppWidth: () => void,
+  numMeasures: number,
   beatsPerMinute: number,
   beatsPerMeasure: number
 };
 
 interface State {
-  numMeasures: number,
   currentPlayingIndex: number,
   tracks: Sound[],
   task?: number
@@ -28,7 +28,6 @@ export default class DrumMachine extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
     this.state = {
-      numMeasures: 4,
       tracks: this.getSounds(),
       currentPlayingIndex: -1
     }
@@ -78,7 +77,7 @@ export default class DrumMachine extends React.Component<Props, State>{
     } else {
       const task = window.setInterval(() => {
         this.setState({
-          currentPlayingIndex: this.state.currentPlayingIndex === (this.state.numMeasures * this.props.beatsPerMeasure) - 1 ? 0 : this.state.currentPlayingIndex + 1,
+          currentPlayingIndex: this.state.currentPlayingIndex === (this.props.numMeasures * this.props.beatsPerMeasure) - 1 ? 0 : this.state.currentPlayingIndex + 1,
           task: task,
         });
       }, 60000 / this.props.beatsPerMinute);
@@ -90,7 +89,7 @@ export default class DrumMachine extends React.Component<Props, State>{
         <Track
           soundCache={this.props.soundCache}
           isCurrentlyPlaying={this.props.playing}
-          amtMeasures={this.state.numMeasures}
+          amtMeasures={this.props.numMeasures}
           beatsPerMeasure={this.props.beatsPerMeasure}
           sound={sound}
           trackIndex={index}
@@ -130,7 +129,7 @@ export default class DrumMachine extends React.Component<Props, State>{
           gridRowStart: this.state.tracks.length,
           gridRowEnd: this.state.tracks.length + 1,
           gridColumnStart: 1,
-          gridColumnEnd: this.state.numMeasures
+          gridColumnEnd: this.props.numMeasures
         }} onClick={addNewTrack}>
           <FontAwesomeIcon className="add-icon" icon={faPlusCircle} />
         </div>

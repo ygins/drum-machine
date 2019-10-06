@@ -85,13 +85,12 @@
   font-size: 200%;
 }
 
-#footer{
-  grid-area: footer;
-  width: 10px;
-  height: 10px;
+#right{
+  grid-area: right;
+  justify-self: center;
 }
 
 .github-icon{
-  height: 100%;
-  width: 100%;
+  font-size: 350%;
+  margin: 10% auto auto auto;
 }
