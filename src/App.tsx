@@ -4,6 +4,7 @@ import DrumMachine from "./components/DrumMachine";
 import { SoundCache } from "./sounds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight, faPlayCircle, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons"
 import "./App.scss";
 
 interface Props {
@@ -47,6 +48,7 @@ export default class MyApp extends React.Component<Props, State>{
               }}
             >
             </DrumMachine>
+            <Footer />
           </Grid>
         </Themes.Context.Provider>
       </div>
@@ -66,30 +68,30 @@ export default class MyApp extends React.Component<Props, State>{
         <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop} />
       </div>
     )
-    const numberInput = (name: string, min: number, max: number, defaultVal: number, action: (app: MyApp, val: number)=>void)=>{
+    const numberInput = (name: string, min: number, max: number, defaultVal: number, action: (app: MyApp, val: number) => void) => {
       return (
         <div className={`${name}-control number-control`}>
           <p className={`number-title`}>
             {name.toUpperCase()}
           </p>
           <input className={`number-input`} type="number" name={name.toUpperCase()}
-          min={min} max={max} defaultValue={defaultVal.toString()}
-          style={{width: "100%"}}
-          onKeyUp={(e)=>{
-            if (e.keyCode == 13) {
-              let val = parseInt(e.currentTarget.value);
-              if(val<min){
-                e.currentTarget.value=min.toString();
-                val=min;
+            min={min} max={max} defaultValue={defaultVal.toString()}
+            style={{ width: "100%" }}
+            onKeyUp={(e) => {
+              if (e.keyCode == 13) {
+                let val = parseInt(e.currentTarget.value);
+                if (val < min) {
+                  e.currentTarget.value = min.toString();
+                  val = min;
+                }
+                else if (val > max) {
+                  e.currentTarget.value = max.toString();
+                  val = max;
+                }
+                action(this, val);
+                return false;
               }
-              else if(val>max){
-                e.currentTarget.value=max.toString();
-                val=max;
-              }
-              action(this, val);
-              return false;
-            }
-          }}/>
+            }} />
         </div>
       )
     }
@@ -98,8 +100,8 @@ export default class MyApp extends React.Component<Props, State>{
         <div className="play-controller controller">
           {getPlayButton()}
           {getShowButton()}
-          {numberInput("bpm", 10, 360, 90, (app, val)=>app.setState({beatsPerMinute: val}))}
-          {numberInput("beats", 2, 8, 4, (app, val)=>app.setState({beatsPerMeasure: val}))}
+          {numberInput("bpm", 10, 360, 90, (app, val) => app.setState({ beatsPerMinute: val }))}
+          {numberInput("beats", 2, 8, 4, (app, val) => app.setState({ beatsPerMeasure: val }))}
         </div>
       )
     } else {
@@ -120,3 +122,9 @@ const Grid: React.FC = (props: any) => {
     </div>
   )
 }
+
+const Footer: React.FC = () => (
+  <div id="footer">
+    <FontAwesomeIcon className="github-icon" icon={faGithub} />
+  </div>
+)

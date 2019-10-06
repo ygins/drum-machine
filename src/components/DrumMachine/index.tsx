@@ -55,7 +55,10 @@ export default class DrumMachine extends React.Component<Props, State>{
         this.togglePlaying(true, false);
       }
     }
-    this.props.updateAppWidth();
+    if(this.state.tracks.length!==prevState.tracks.length){
+          this.props.updateAppWidth();
+    }
+
   }
 
   componentDidMount() {

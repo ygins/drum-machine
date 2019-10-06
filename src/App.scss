@@ -84,3 +84,14 @@
   grid-row: 1/2;
   font-size: 200%;
 }
+
+#footer{
+  grid-area: footer;
+  width: 10px;
+  height: 10px;
+}
+
+.github-icon{
+  height: 100%;
+  width: 100%;
+}
