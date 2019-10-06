@@ -66,35 +66,40 @@ export default class MyApp extends React.Component<Props, State>{
         <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop} />
       </div>
     )
-    const getBPMControl = () => (
-      <div className="bpm-control">
-        <p className="bpm-title">
-          BPM
-        </p>
-        <input className="bpm-input" type="number" name="BPM" min="10" max="240" defaultValue="90" style={{ width: "100%" }}
-        onKeyUp={(e) => {
-          if (e.keyCode == 13) {
-            let bpm = parseInt(e.currentTarget.value);
-            if(bpm<10){
-              e.currentTarget.value="10";
-              bpm=10;
+    const numberInput = (name: string, min: number, max: number, defaultVal: number, action: (app: MyApp, val: number)=>void)=>{
+      return (
+        <div className={`${name}-control number-control`}>
+          <p className={`number-title`}>
+            {name.toUpperCase()}
+          </p>
+          <input className={`number-input`} type="number" name={name.toUpperCase()}
+          min={min} max={max} defaultValue={defaultVal.toString()}
+          style={{width: "100%"}}
+          onKeyUp={(e)=>{
+            if (e.keyCode == 13) {
+              let val = parseInt(e.currentTarget.value);
+              if(val<min){
+                e.currentTarget.value=min.toString();
+                val=min;
+              }
+              else if(val>max){
+                e.currentTarget.value=max.toString();
+                val=max;
+              }
+              action(this, val);
+              return false;
             }
-            else if(bpm>360){
-              e.currentTarget.value="360";
-              bpm=360;
-            }
-            this.setState({ beatsPerMinute: bpm });
-            return false;
-          }
-        }}/>
-      </div>
-    )
+          }}/>
+        </div>
+      )
+    }
     if (showing) {
       return (
         <div className="play-controller controller">
           {getPlayButton()}
           {getShowButton()}
-          {getBPMControl()}
+          {numberInput("bpm", 10, 360, 90, (app, val)=>app.setState({beatsPerMinute: val}))}
+          {numberInput("beats", 2, 8, 4, (app, val)=>app.setState({beatsPerMeasure: val}))}
         </div>
       )
     } else {
