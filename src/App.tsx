@@ -11,14 +11,16 @@ interface Props {
 };
 interface State {
   playing: boolean,
-  appHeight: number
+  appHeight: number,
+  beatsPerMinute: number,
+  beatsPerMeasure: number
 };
 
 export default class MyApp extends React.Component<Props, State>{
 
   constructor(props: Props) {
     super(props);
-    this.state = { playing: false, appHeight: 0 };
+    this.state = { playing: false, appHeight: 0, beatsPerMinute: 90, beatsPerMeasure: 4 };
   }
 
 
@@ -31,6 +33,8 @@ export default class MyApp extends React.Component<Props, State>{
             <DrumMachine
               soundCache={this.props.soundCache}
               playing={this.state.playing}
+              beatsPerMinute={this.state.beatsPerMinute}
+              beatsPerMeasure={this.state.beatsPerMeasure}
               setPlaying={(playing: boolean) => {
                 this.setState({ playing: playing });
               }}
@@ -62,11 +66,32 @@ export default class MyApp extends React.Component<Props, State>{
         <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop} />
       </div>
     )
+    const getBPMControl = () => (
+      <div className="bpm-control">
+        <input type="number" name="BPM" min="10" max="240" defaultValue="90" style={{ width: "100%" }}
+        onKeyUp={(e) => {
+          if (e.keyCode == 13) {
+            let bpm = parseInt(e.currentTarget.value);
+            if(bpm<10){
+              e.currentTarget.value="10";
+              bpm=10;
+            }
+            else if(bpm>360){
+              e.currentTarget.value="360";
+              bpm=360;
+            }
+            this.setState({ beatsPerMinute: bpm });
+            return false;
+          }
+        }}/>
+      </div>
+    )
     if (showing) {
       return (
         <div className="play-controller controller">
           {getPlayButton()}
           {getShowButton()}
+          {getBPMControl()}
         </div>
       )
     } else {

@@ -21,7 +21,6 @@
 .controller{
   position: fixed;
   display: grid;
-  grid-template-rows: 100%;
   left: 5px;
   top: 5px;
 }
@@ -30,11 +29,21 @@
   width: 2%;
   height: 5%;
   grid-template-columns: 100%;
+  grid-template-rows: 100%;
 }
 .play-controller{
   width: 10%;
-  height: 10%;
-  grid-template-columns: 20% 80% 80%;
+  height: 50%;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 25% 25% 25% 25%;
+}
+
+.bpm-control{
+  width: 100%;
+  height: 20%;
+  grid-row: 2/3;
+  grid-column: 2/3;
+  align-self: center;
 }
 
 .show-button{
