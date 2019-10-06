@@ -68,7 +68,10 @@ export default class MyApp extends React.Component<Props, State>{
     )
     const getBPMControl = () => (
       <div className="bpm-control">
-        <input type="number" name="BPM" min="10" max="240" defaultValue="90" style={{ width: "100%" }}
+        <p className="bpm-title">
+          BPM
+        </p>
+        <input className="bpm-input" type="number" name="BPM" min="10" max="240" defaultValue="90" style={{ width: "100%" }}
         onKeyUp={(e) => {
           if (e.keyCode == 13) {
             let bpm = parseInt(e.currentTarget.value);
