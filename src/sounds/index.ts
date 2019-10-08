@@ -5,16 +5,17 @@ type HowlProvider = () => Howl
 export class SoundCache {
   private readonly allSounds: Map<string, string[]>;
   private readonly cache: Map<string, Map<string, Howl>> = new Map();
+  private readonly apiLink: string = require("../options.json").apiLink;
 
   constructor(sounds: Map<string, string[]>) {
     this.allSounds = sounds;
-    sounds.forEach((value: string[], key: string)=>{
+    sounds.forEach((value: string[], key: string) => {
       this.cache.set(key, new Map());
     })
   }
   public static async create(): Promise<SoundCache> {
     const sounds = new Map<string, string[]>();
-    const response = await fetch("http://localhost:2323/paths").then(response => response.json());
+    const response = await fetch(`${require("../options.json").apiLink}/paths`).then(response => response.json());
     Object.keys(response).forEach(key => {
       response[key].forEach((sound: string) => {
         const arr = sounds.get(key) ? sounds.get(key) as string[] : [];
@@ -28,7 +29,7 @@ export class SoundCache {
   public pull(category: string, sound: string): Promise<Howl> {
     return new Promise<Howl>((resolve, reject) => {
       const howlObj = new Howl({
-        src: [`http://localhost:2323/sound/${category}/${sound}.wav`]
+        src: [`${this.apiLink}/sound/${category}/${sound}.wav`]
       });
       howlObj.once("load", () => resolve(howlObj));
       howlObj.once("loaderror", (soundId: number, err: any) => reject("Error loading howl! " + err));
@@ -43,8 +44,8 @@ export class SoundCache {
     if (categoryArr.indexOf(sound) === -1) {
       return undefined;
     }
-    let howlMap=new Map();
-    const result=this.cache.get(category);
+    let howlMap = new Map();
+    const result = this.cache.get(category);
     if (result) {
       howlMap = result;
     }
