@@ -49,7 +49,7 @@ export default class Track extends React.Component<Props, State>{
   }
 
   componentDidUpdate(props: Props) {
-    if (props.trackInfo.sound != this.props.trackInfo.sound) {
+    if (props.trackInfo.sound !== this.props.trackInfo.sound) {
       this.updateSound();
     }
   }
@@ -60,7 +60,7 @@ export default class Track extends React.Component<Props, State>{
       return arr;
     }
     const noteIndexFrom = (measureIndex: number) => {
-      if (this.props.currentPlayingIndex == -1) {
+      if (this.props.currentPlayingIndex === -1) {
         return -1;
       }
       const currentMeasure = Math.floor(this.props.currentPlayingIndex / this.props.beatsPerMeasure);

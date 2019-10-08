@@ -1,6 +1,5 @@
 import React from "react";
 import "./style.scss";
-import { Howl } from "howler";
 
 interface Props {
   indexInMeasure: number,
@@ -10,30 +9,20 @@ interface Props {
   setSelected: (selected: boolean)=>void
 }
 
-interface State {
-
-}
-
-class TrackLight extends React.Component<Props, State>{
-  constructor(props: Props) {
-    super(props);
-  }
-  render() {
-    const shouldPlay=this.props.selected && this.props.onNote;
+const TrackLight: React.FC<Props> = (props:Props)=>{
+    const shouldPlay=props.selected && props.onNote;
     if (shouldPlay) {
-      this.props.howlProvider().play();
+      props.howlProvider().play();
     }
     return (
       <div className="track-light" style={{
-        backgroundColor: shouldPlay ? "red" : this.props.selected ? "white" : "transparent",
-        gridColumnStart: this.props.indexInMeasure + 1,
-        gridColumnEnd: this.props.indexInMeasure + 2
+        backgroundColor: shouldPlay ? "red" : props.selected ? "white" : "transparent",
+        gridColumnStart: props.indexInMeasure + 1,
+        gridColumnEnd: props.indexInMeasure + 2
       }}
-        onClick={() => this.props.setSelected(!this.props.selected)}>
+        onClick={() => props.setSelected(props.selected)}>
       </div>
     )
-  }
-
 }
 
 export default TrackLight;

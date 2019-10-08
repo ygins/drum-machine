@@ -96,7 +96,7 @@ export default class MyApp extends React.Component<Props, State>{
               updateAppWidth={() => {
                 const windowHeight = Math.max(document.body.scrollHeight, window.outerHeight);
                 const toSet = Math.max(windowHeight, this.state.appHeight);
-                if (this.state.appHeight != toSet) {
+                if (this.state.appHeight !== toSet) {
                   this.setState({ appHeight: toSet });
                 }
               }}
@@ -132,7 +132,7 @@ export default class MyApp extends React.Component<Props, State>{
             min={min} max={max} defaultValue={defaultVal.toString()}
             style={{ width: "100%" }}
             onKeyUp={(e) => {
-              if (e.keyCode == 13) {
+              if (e.keyCode === 13) {
                 let val = parseInt(e.currentTarget.value);
                 if (val < min) {
                   e.currentTarget.value = min.toString();

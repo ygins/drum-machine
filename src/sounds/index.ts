@@ -32,7 +32,7 @@ export class SoundCache {
         src: [`${this.apiLink}/sound/${category}/${sound}.wav`]
       });
       howlObj.once("load", () => resolve(howlObj));
-      howlObj.once("loaderror", (soundId: number, err: any) => reject("Error loading howl! " + err));
+      howlObj.once("loaderror", (err: any) => reject("Error loading howl! " + err));
     });
   }
 

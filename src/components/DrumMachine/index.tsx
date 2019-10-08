@@ -44,10 +44,10 @@ export default class DrumMachine extends React.Component<Props, State>{
     return this.props.tracks[0].selected[0].length;
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevProps.playing != this.props.playing) {
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.playing !== this.props.playing) {
       this.togglePlaying(this.props.playing, true);
-    } else if (prevProps.beatsPerMinute != this.props.beatsPerMinute) {
+    } else if (prevProps.beatsPerMinute !== this.props.beatsPerMinute) {
       if (this.props.playing) {
         this.togglePlaying(false, true);
         this.togglePlaying(true, false);
@@ -99,7 +99,7 @@ export default class DrumMachine extends React.Component<Props, State>{
             this.props.setTracks(newTracks);
           }}
           removeTrack={() => {
-            if (this.props.tracks.length == 1) {
+            if (this.props.tracks.length === 1) {
               return;
             }
             const newTracks = this.props.tracks.slice();
