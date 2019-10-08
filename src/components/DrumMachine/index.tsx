@@ -1,7 +1,7 @@
 import React from "react";
 import Themes from "../../Theme";
 import "./style.scss";
-import { SoundCache, Sound } from "../.././sounds";
+import { SoundCache, Sound, TrackInfo } from "../.././sounds";
 import Track from "../Track";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -11,14 +11,13 @@ interface Props {
   playing: boolean,
   setPlaying: (playing: boolean) => void,
   updateAppWidth: () => void,
-  numMeasures: number,
   beatsPerMinute: number,
-  beatsPerMeasure: number
+  tracks: TrackInfo[],
+  setTracks: (newTracks: TrackInfo[]) => void
 };
 
 interface State {
   currentPlayingIndex: number,
-  tracks: Sound[],
   task?: number
 };
 
@@ -28,7 +27,6 @@ export default class DrumMachine extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
     this.state = {
-      tracks: this.getSounds(),
       currentPlayingIndex: -1
     }
     window.addEventListener("keydown", (ev: KeyboardEvent) => {
@@ -37,12 +35,13 @@ export default class DrumMachine extends React.Component<Props, State>{
       }
     });
   }
-  private getSounds() {
-    return [
-      { category: "Acoustic", sound: "ClHat-01" },
-      { category: "Acoustic", sound: "Crash-02" },
-      { category: "Acoustic", sound: "Tom-04" }
-    ]
+
+  private getMeasuresPerTrack() {
+    return this.props.tracks[0].selected.length;
+  }
+
+  private getBeatsPerMeasure() {
+    return this.props.tracks[0].selected[0].length;
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -54,8 +53,8 @@ export default class DrumMachine extends React.Component<Props, State>{
         this.togglePlaying(true, false);
       }
     }
-    if(this.state.tracks.length!==prevState.tracks.length){
-          this.props.updateAppWidth();
+    if (this.props.tracks.length !== prevProps.tracks.length) {
+      this.props.updateAppWidth();
     }
 
   }
@@ -77,35 +76,43 @@ export default class DrumMachine extends React.Component<Props, State>{
     } else {
       const task = window.setInterval(() => {
         this.setState({
-          currentPlayingIndex: this.state.currentPlayingIndex === (this.props.numMeasures * this.props.beatsPerMeasure) - 1 ? 0 : this.state.currentPlayingIndex + 1,
+          currentPlayingIndex: this.state.currentPlayingIndex === (this.getMeasuresPerTrack() * this.getBeatsPerMeasure()) - 1 ? 0 : this.state.currentPlayingIndex + 1,
           task: task,
         });
       }, 60000 / this.props.beatsPerMinute);
     }
   }
   private getTracks() {
-    return this.state.tracks.map((sound, index) => {
+    return this.props.tracks.map((sound, index) => {
       return (
         <Track
           soundCache={this.props.soundCache}
           isCurrentlyPlaying={this.props.playing}
-          amtMeasures={this.props.numMeasures}
-          beatsPerMeasure={this.props.beatsPerMeasure}
-          sound={sound}
+          amtMeasures={this.getMeasuresPerTrack()}
+          beatsPerMeasure={this.getBeatsPerMeasure()}
           trackIndex={index}
+          trackInfo={sound}
           key={index}
+          setBeats={(beats: boolean[][]) => {
+            const newTracks = this.props.tracks.slice();
+            newTracks[index].selected = beats;
+            this.props.setTracks(newTracks);
+          }}
           removeTrack={() => {
-            if (this.state.tracks.length == 1) {
+            if (this.props.tracks.length == 1) {
               return;
             }
-            const newTracks = this.state.tracks.slice();
-            const deleted = newTracks.splice(index, 1);
-            this.setState({ tracks: newTracks });
+            const newTracks = this.props.tracks.slice();
+            newTracks.splice(index, 1);
+            this.props.setTracks(newTracks);
           }}
           changeTrack={(track: Sound) => {
-            const newTracks = this.state.tracks.slice();
-            const deleted = newTracks.splice(index, 1, track);
-            this.setState({ tracks: newTracks });
+            const newTracks = this.props.tracks.slice();
+            newTracks.splice(index, 1, {
+              sound: track,
+              selected: this.props.tracks[index].selected
+            });
+            this.props.setTracks(newTracks)
           }}
           currentPlayingIndex={this.state.currentPlayingIndex}
         />
@@ -115,9 +122,16 @@ export default class DrumMachine extends React.Component<Props, State>{
   render() {
     const currentTheme = this.context;
     const addNewTrack = () => {
-      const newArr = this.state.tracks.slice();
-      newArr.push({ category: "Acoustic", sound: "Tom-04" });
-      this.setState({ tracks: newArr });
+      const newArr = this.props.tracks.slice();
+      const newSelectionArr: boolean[][] = [];
+      for (let r = 0; r < this.getMeasuresPerTrack(); r++) {
+        newSelectionArr[r] = [];
+        for (let c = 0; c < this.getBeatsPerMeasure(); c++) {
+          newSelectionArr[r][c] = false;
+        }
+      }
+      newArr.push({ sound: { category: "Acoustic", sound: "Tom-04" }, selected: newSelectionArr });
+      this.props.setTracks(newArr);
     }
     return (
       <div id="frame" style={{
@@ -126,10 +140,10 @@ export default class DrumMachine extends React.Component<Props, State>{
       }}>
         {this.getTracks()}
         <div className="add-icon-container" style={{
-          gridRowStart: this.state.tracks.length,
-          gridRowEnd: this.state.tracks.length + 1,
+          gridRowStart: this.props.tracks.length,
+          gridRowEnd: this.props.tracks.length + 1,
           gridColumnStart: 1,
-          gridColumnEnd: this.props.numMeasures
+          gridColumnEnd: this.getMeasuresPerTrack()
         }} onClick={addNewTrack}>
           <FontAwesomeIcon className="add-icon" icon={faPlusCircle} />
         </div>

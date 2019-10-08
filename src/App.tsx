@@ -1,7 +1,7 @@
 import React from 'react';
 import Themes from "./Theme";
 import DrumMachine from "./components/DrumMachine";
-import { SoundCache } from "./sounds";
+import { SoundCache, TrackInfo } from "./sounds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight, faPlayCircle, faStop } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -13,9 +13,8 @@ interface Props {
 interface State {
   playing: boolean,
   appHeight: number,
-  beatsPerMinute: number,
-  beatsPerMeasure: number,
-  amtMeasures: number
+  tracks: TrackInfo[]
+  beatsPerMinute: number
 };
 
 export default class MyApp extends React.Component<Props, State>{
@@ -26,11 +25,58 @@ export default class MyApp extends React.Component<Props, State>{
       playing: false,
       appHeight: 0,
       beatsPerMinute: 90,
-      beatsPerMeasure: 4,
-      amtMeasures: 4
+      tracks: this.getInitialSounds()
     };
   }
 
+  private getInitialSounds() {
+    function createEmptyTrack(category: string, sound: string): TrackInfo {
+      const arr: boolean[][] = [];
+      for (let r = 0; r < 4; r++) {
+        arr[r] = [];
+        for (let c = 0; c < 4; c++) {
+          arr[r][c] = false;
+        }
+      }
+      return {
+        sound: {
+          category: category,
+          sound: sound
+        },
+        selected: arr
+      }
+    }
+    return [
+      createEmptyTrack("Acoustic", "ClHat-01"),
+      createEmptyTrack("Acoustic", "Crash-02"),
+      createEmptyTrack("Acoustic", "Tom-04")
+    ]
+  }
+
+  private setBeatsPerMeasure(newBeatsPerMeasure: number) {
+    const newArr = this.state.tracks.slice();
+    newArr.forEach(track => track.selected.forEach(measure => measure.length = newBeatsPerMeasure));
+    this.setState({ tracks: newArr });
+  }
+
+  private setAmountMeasures(newAmount: number) {
+    const newArr = this.state.tracks.slice();
+    newArr.forEach(track => {
+      const oldLength=track.selected.length;
+      track.selected.length = newAmount;
+      if(newAmount>oldLength){
+        for(let newMeasureIndex=oldLength; newMeasureIndex<track.selected.length; newMeasureIndex++){
+          console.log(newMeasureIndex+" INDEX")
+          track.selected[newMeasureIndex]=[];
+          track.selected[newMeasureIndex].length=this.state.tracks[0].selected[0].length;
+          for(let i=0; i<track.selected[newMeasureIndex].length; i++){
+            track.selected[newMeasureIndex][i]=false;
+          }
+        }
+      }
+    });
+    this.setState({ tracks: newArr });
+  }
 
   render() {
     return (
@@ -42,11 +88,11 @@ export default class MyApp extends React.Component<Props, State>{
               soundCache={this.props.soundCache}
               playing={this.state.playing}
               beatsPerMinute={this.state.beatsPerMinute}
-              beatsPerMeasure={this.state.beatsPerMeasure}
-              numMeasures={this.state.amtMeasures}
               setPlaying={(playing: boolean) => {
                 this.setState({ playing: playing });
               }}
+              setTracks={(newTracks: TrackInfo[]) => this.setState({ tracks: newTracks })}
+              tracks={this.state.tracks}
               updateAppWidth={() => {
                 const windowHeight = Math.max(document.body.scrollHeight, window.outerHeight);
                 const toSet = Math.max(windowHeight, this.state.appHeight);
@@ -109,8 +155,8 @@ export default class MyApp extends React.Component<Props, State>{
           {getPlayButton()}
           {getShowButton()}
           {numberInput("bpm", 10, 360, this.state.beatsPerMinute, (app, val) => app.setState({ beatsPerMinute: val }))}
-          {numberInput("beats", 2, 8, this.state.beatsPerMeasure, (app, val) => app.setState({ beatsPerMeasure: val }))}
-          {numberInput("measures", 2, 16, this.state.amtMeasures, (app, val) => app.setState({ amtMeasures: val }))}
+          {numberInput("beats", 2, 8, this.state.tracks[0].selected[0].length, (app, val) => app.setBeatsPerMeasure(val))}
+          {numberInput("measures", 2, 16, this.state.tracks[0].selected.length, (app, val) => app.setAmountMeasures(val))}
         </div>
       )
     } else {

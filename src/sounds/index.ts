@@ -77,3 +77,8 @@ export interface Sound {
   category: string,
   sound: string
 }
+
+export interface TrackInfo {
+  sound: Sound
+  selected: boolean[][]
+}
