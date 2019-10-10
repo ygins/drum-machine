@@ -1,5 +1,5 @@
 import React from 'react';
-import Themes from "./Theme";
+import { Theme, getTheme, getThemeNames, THEMES, Context } from "./Theme";
 import DrumMachine from "./components/DrumMachine";
 import { SoundCache, TrackInfo } from "./sounds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,8 +13,9 @@ interface Props {
 interface State {
   playing: boolean,
   appHeight: number,
-  tracks: TrackInfo[]
-  beatsPerMinute: number
+  tracks: TrackInfo[],
+  beatsPerMinute: number,
+  theme: Theme
 };
 
 export default class MyApp extends React.Component<Props, State>{
@@ -25,7 +26,8 @@ export default class MyApp extends React.Component<Props, State>{
       playing: false,
       appHeight: 0,
       beatsPerMinute: 90,
-      tracks: this.getInitialSounds()
+      tracks: this.getInitialSounds(),
+      theme: THEMES.DEFAULT
     };
   }
 
@@ -53,24 +55,24 @@ export default class MyApp extends React.Component<Props, State>{
     ]
   }
 
-  private setBeatsPerMeasure(newBeatsPerMeasure: number) {
+  setBeatsPerMeasure(newBeatsPerMeasure: number) {
     const newArr = this.state.tracks.slice();
     newArr.forEach(track => track.selected.forEach(measure => measure.length = newBeatsPerMeasure));
     this.setState({ tracks: newArr });
   }
 
-  private setAmountMeasures(newAmount: number) {
+  setAmountMeasures(newAmount: number) {
     const newArr = this.state.tracks.slice();
     newArr.forEach(track => {
-      const oldLength=track.selected.length;
+      const oldLength = track.selected.length;
       track.selected.length = newAmount;
-      if(newAmount>oldLength){
-        for(let newMeasureIndex=oldLength; newMeasureIndex<track.selected.length; newMeasureIndex++){
-          console.log(newMeasureIndex+" INDEX")
-          track.selected[newMeasureIndex]=[];
-          track.selected[newMeasureIndex].length=this.state.tracks[0].selected[0].length;
-          for(let i=0; i<track.selected[newMeasureIndex].length; i++){
-            track.selected[newMeasureIndex][i]=false;
+      if (newAmount > oldLength) {
+        for (let newMeasureIndex = oldLength; newMeasureIndex < track.selected.length; newMeasureIndex++) {
+          console.log(newMeasureIndex + " INDEX")
+          track.selected[newMeasureIndex] = [];
+          track.selected[newMeasureIndex].length = this.state.tracks[0].selected[0].length;
+          for (let i = 0; i < track.selected[newMeasureIndex].length; i++) {
+            track.selected[newMeasureIndex][i] = false;
           }
         }
       }
@@ -81,8 +83,13 @@ export default class MyApp extends React.Component<Props, State>{
   render() {
     return (
       <div className="DrumMachineApp" style={{ height: `${this.state.appHeight}px` }}>
-        <Themes.Context.Provider value={Themes.THEMES.DEFAULT}>
-          <this.Controller />
+        <Context.Provider value={this.state.theme}>
+          <Controller
+            playing={this.state.playing}
+            bpm={this.state.beatsPerMinute}
+            tracks={this.state.tracks}
+            useApp={(func: (app: MyApp)=>void)=>func(this)}>
+          </Controller>
           <Grid>
             <DrumMachine
               soundCache={this.props.soundCache}
@@ -104,73 +111,108 @@ export default class MyApp extends React.Component<Props, State>{
             </DrumMachine>
             <RightBar />
           </Grid>
-        </Themes.Context.Provider>
+        </Context.Provider>
       </div>
     );
   }
-  readonly Controller: React.FC = () => {
-    const [showing, setShowing] = React.useState(false);
-    const getShowButton = () => (
-      <div className="show-button"
-        onClick={() => setShowing(!showing)}>
-        <FontAwesomeIcon icon={!showing ? faCaretRight : faCaretLeft} />
-      </div>
-    )
-    const getPlayButton = () => (
-      <div className="play-button"
-        onClick={() => this.setState({ playing: !this.state.playing })}>
-        <FontAwesomeIcon className="toggle-icon" icon={!this.state.playing ? faPlayCircle : faStop} />
-      </div>
-    )
-    const numberInput = (name: string, min: number, max: number, defaultVal: number, action: (app: MyApp, val: number) => void) => {
-      return (
-        <div className={`${name}-control number-control`}>
-          <p className={`number-title`}>
-            {name.toUpperCase()}
-          </p>
-          <input className={`number-input`} type="number" name={name.toUpperCase()}
-            min={min} max={max} defaultValue={defaultVal.toString()}
-            style={{ width: "100%" }}
-            onKeyUp={(e) => {
-              if (e.keyCode === 13) {
-                let val = parseInt(e.currentTarget.value);
-                if (val < min) {
-                  e.currentTarget.value = min.toString();
-                  val = min;
-                }
-                else if (val > max) {
-                  e.currentTarget.value = max.toString();
-                  val = max;
-                }
-                action(this, val);
-                return false;
+
+}
+
+interface ControllerProps {
+  playing: boolean,
+  bpm: number,
+  tracks: TrackInfo[],
+  useApp: (func: (app: MyApp) => void) => void
+}
+const Controller: React.FC<ControllerProps> = (props: ControllerProps) => {
+  const [showing, setShowing] = React.useState(false);
+  const theme = React.useContext(Context);
+  const getShowButton = () => (
+    <div className="show-button"
+      onClick={() => setShowing(!showing)}>
+      <FontAwesomeIcon icon={!showing ? faCaretRight : faCaretLeft} style={{ color: theme.text, fontSize: "200%" }} />
+    </div>
+  )
+  const getPlayButton = () => (
+    <div className="play-button"
+      onClick={() => props.useApp(app => app.setState({ playing: props.playing }))}>
+      <FontAwesomeIcon className="toggle-icon" icon={!props.playing ? faPlayCircle : faStop} />
+    </div>
+  )
+  const numberInput = (name: string, min: number, max: number, defaultVal: number, action: (app: MyApp, val: number) => void) => {
+    return (
+      <div className={`${name}-control control`}>
+        <p className={`input-title`} style={{ color: theme.text }}>
+          {name.toUpperCase()}
+        </p>
+        <input className={`input-box`} type="number" name={name.toUpperCase()}
+          min={min} max={max} defaultValue={defaultVal.toString()}
+          style={{ width: "100%" }}
+          onKeyUp={(e) => {
+            if (e.keyCode === 13) {
+              let val = parseInt(e.currentTarget.value);
+              if (val < min) {
+                e.currentTarget.value = min.toString();
+                val = min;
               }
-            }} />
-        </div>
-      )
+              else if (val > max) {
+                e.currentTarget.value = max.toString();
+                val = max;
+              }
+              props.useApp(app => action(app, val));
+              return false;
+            }
+          }} />
+      </div>
+    )
+  }
+  const getThemeInput = () => {
+    const themeOptions = getThemeNames();
+    let themeName = themeOptions.next();
+    const themeNames = [];
+    while (!themeName.done) {
+      themeNames.push(<option value={themeName.value} key={themeName.value}>{themeName.value}</option>);
+      themeName = themeOptions.next();
     }
-    if (showing) {
-      return (
-        <div className="play-controller controller">
-          {getPlayButton()}
-          {getShowButton()}
-          {numberInput("bpm", 10, 360, this.state.beatsPerMinute, (app, val) => app.setState({ beatsPerMinute: val }))}
-          {numberInput("beats", 2, 8, this.state.tracks[0].selected[0].length, (app, val) => app.setBeatsPerMeasure(val))}
-          {numberInput("measures", 2, 16, this.state.tracks[0].selected.length, (app, val) => app.setAmountMeasures(val))}
-        </div>
-      )
-    } else {
-      return (
-        <div className="hidden-play-controller controller">
-          {getShowButton()}
-        </div>
-      )
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const newTheme = getTheme(e.target.value);
+      if (newTheme) {
+        props.useApp(app => app.setState({ theme: newTheme }))
+      }
     }
+    return (
+      <div className="theme-control control">
+        <p className="input-title" style={{ color: theme.text }}>
+          THEME
+        </p>
+        <select name="theme" className="input-box" value={theme.name} onChange={handleChange}>
+          {themeNames}
+        </select>
+      </div>
+    )
+  }
+  if (showing) {
+    return (
+      <div className="play-controller controller">
+        {getPlayButton()}
+        {getShowButton()}
+        {numberInput("bpm", 10, 360, props.bpm, (app, val) => app.setState({ beatsPerMinute: val }))}
+        {numberInput("beats", 2, 8, props.tracks[0].selected[0].length, (app, val) => app.setBeatsPerMeasure(val))}
+        {numberInput("measures", 2, 16, props.tracks[0].selected.length, (app, val) => app.setAmountMeasures(val))}
+        {getThemeInput()}
+      </div>
+    )
+  } else {
+    return (
+      <div className="hidden-play-controller controller">
+        {getShowButton()}
+      </div>
+    )
   }
 }
 
 const Grid: React.FC = (props: any) => {
-  const theme = React.useContext(Themes.Context);
+  const theme = React.useContext(Context);
   return (
     <div id="root-grid" style={{ background: theme.background }}>
       {props.children}

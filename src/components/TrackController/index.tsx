@@ -74,12 +74,14 @@ const TrackController: React.FC<Props> = (props: Props) => {
         <p className="track-name">{props.sound.sound}</p>
         <div
           className="remove-button button"
-          onClick={() => props.removeTrack()}>
+          onClick={() => props.removeTrack()}
+          style={{backgroundColor: theme.button}}>
           <FontAwesomeIcon className="icon" icon={faTrashAlt} />
         </div>
         <div
           className="change-button button"
-          onClick={() => setChanging(true)}>
+          onClick={() => setChanging(true)}
+          style={{backgroundColor: theme.button}}>
           <FontAwesomeIcon className="icon" icon={faExchangeAlt} />
         </div>
       </div>

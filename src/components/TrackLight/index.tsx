@@ -20,7 +20,7 @@ const TrackLight: React.FC<Props> = (props:Props)=>{
         gridColumnStart: props.indexInMeasure + 1,
         gridColumnEnd: props.indexInMeasure + 2
       }}
-        onClick={() => props.setSelected(props.selected)}>
+        onClick={() => props.setSelected(!props.selected)}>
       </div>
     )
 }
