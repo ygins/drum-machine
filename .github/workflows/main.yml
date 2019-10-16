@@ -9,8 +9,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: install
-      run: npm install
     - name: Build and Deploy
       uses: JamesIves/github-pages-deploy-action@master
       env:
