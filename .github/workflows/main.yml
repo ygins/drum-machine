@@ -12,11 +12,11 @@ jobs:
     - name: install
       run: npm install
     - name: config git
-      env:
-        email: ${{ secrets.EMAIL }}
       run: |
         git config user.email ${{env.email}}
         git config user.name "Yona168"
+      env:
+        EMAIL: ${{ secrets.EMAIL }}
     - name: deploy
       run: npm run deploy
     
