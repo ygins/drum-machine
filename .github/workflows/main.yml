@@ -9,8 +9,13 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Deploy
+    - name: install
+      run: npm install
+    - name: config git
       run: |
-        npm install
-        npm run deploy
+        git config user.email ${{EMAIL}}
+        git config user.name "Yona168"
+    - name: deploy
+      run: npm run deploy
+    
         
