@@ -11,13 +11,12 @@ jobs:
     - uses: actions/checkout@v1
     - name: install
       run: npm install
-    - name: config git
-      run: |
-        git config user.email ${{ secrets.EMAIL }}
-        git config user.name "Yona168"
+    - name: Build and Deploy
+      uses: JamesIves/github-pages-deploy-action@master
       env:
-        EMAIL: ${{ secrets.EMAIL }}
-    - name: deploy
-      run: npm run deploy
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build
+        BUILD_SCRIPT: npm install && npm run build
     
         
