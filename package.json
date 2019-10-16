@@ -23,7 +23,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "repository": "https://github.com/Yona168/drum-machine/",
+  "repository": "github:Yona168/drum-machine",
   "eslintConfig": {
     "extends": "react-app"
   },
