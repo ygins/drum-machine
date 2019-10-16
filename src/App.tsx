@@ -200,7 +200,7 @@ const Controller: React.FC<ControllerProps> = (props: ControllerProps) => {
         {numberInput("beats", 1, 8, props.tracks[0].selected[0].length, (app, val) => app.setBeatsPerMeasure(val))}
         {numberInput("measures", 1, 16, props.tracks[0].selected.length, (app, val) => app.setAmountMeasures(val))}
         {getThemeInput()}
-        <p id="instructions">Press Enter in a box to update changes!</p>
+        <p id="instructions" style={{color: theme.text}}>Press Enter in a box to update changes!</p>
       </div>
     )
   } else {
