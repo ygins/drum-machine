@@ -13,7 +13,7 @@ jobs:
       run: npm install
     - name: config git
       run: |
-        git config user.email ${{env.email}}
+        git config user.email ${{ secrets.EMAIL }}
         git config user.name "Yona168"
       env:
         EMAIL: ${{ secrets.EMAIL }}
