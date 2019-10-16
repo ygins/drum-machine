@@ -15,7 +15,7 @@ jobs:
       env:
         email: ${{secrets.EMAIL}}
       run: |
-        git config user.email ${{env.email}}
+        git config user.email env.email
         git config user.name "Yona168"
     - name: deploy
       run: npm run deploy
