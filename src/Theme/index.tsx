@@ -12,8 +12,8 @@ export interface Theme {
 
 const themeMap = new Map<string, Theme>();
 
-export const THEMES = {
-  DEFAULT: {
+export const THEMES: Theme[] = [
+  {
     background: "#F7D87C",
     machine: "#28CCFA",
     border: "5px solid black",
@@ -22,19 +22,35 @@ export const THEMES = {
     text: "black",
     name: "default"
   },
-  DARK: {
+  {
     background: "gray",
     machine: "gray",
     border: "5px solid black",
-    measureBorder: "2px solid white",
-    button: "blue",
+    measureBorder: "2px solid black",
+    button: "black",
     text: "white",
     name: "dark"
+  },
+  {
+    background: "black",
+    machine: "white",
+    border: "5px solid black",
+    measureBorder: "2px solid black",
+    button: "black",
+    text: "white",
+    name: "ghost"
+  },
+  {
+    background: "red",
+    machine: "yellow",
+    border: "5px solid black",
+    measureBorder: "2px solid black",
+    button: "orange",
+    text: "yellow",
+    name: "hot dog"
   }
-}
-
-themeMap.set(THEMES.DEFAULT.name, THEMES.DEFAULT);
-themeMap.set(THEMES.DARK.name, THEMES.DARK);
+]
+THEMES.forEach(theme=>themeMap.set(theme.name, theme));
 
 export const addTheme = (name: string, theme: Theme) => themeMap.set(name, theme);
 export const getTheme = (name: string) => {
@@ -45,7 +61,7 @@ export const getTheme = (name: string) => {
   return result;
 }
 export const getThemeNames = () => themeMap.keys();
-export const Context=React.createContext<Theme>(THEMES.DEFAULT)
+export const Context = React.createContext<Theme>(THEMES[0])
 
 export default {
   THEMES: THEMES,

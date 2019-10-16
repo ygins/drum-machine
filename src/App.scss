@@ -48,10 +48,6 @@
   grid-row: 2/3;
 }
 
-.input-box {
-  grid-row: 2/3;
-}
-
 .input-title {
   grid-row: 1/2;
   font-size: 100%;
@@ -91,6 +87,12 @@
 }
 
 .github-icon{
+  background-color: white;
+  border-radius: 80%;
   font-size: 350%;
   margin: 10% auto auto auto;
+}
+
+#instructions{
+  grid-column: 1/3;
 }

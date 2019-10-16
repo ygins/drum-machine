@@ -27,7 +27,7 @@ export default class MyApp extends React.Component<Props, State>{
       appHeight: 0,
       beatsPerMinute: 90,
       tracks: this.getInitialSounds(),
-      theme: THEMES.DEFAULT
+      theme: THEMES[0]
     };
   }
 
@@ -135,7 +135,7 @@ const Controller: React.FC<ControllerProps> = (props: ControllerProps) => {
   )
   const getPlayButton = () => (
     <div className="play-button"
-      onClick={() => props.useApp(app => app.setState({ playing: props.playing }))}>
+      onClick={() => props.useApp(app => app.setState({ playing: !props.playing }))}>
       <FontAwesomeIcon className="toggle-icon" icon={!props.playing ? faPlayCircle : faStop} />
     </div>
   )
@@ -196,10 +196,11 @@ const Controller: React.FC<ControllerProps> = (props: ControllerProps) => {
       <div className="play-controller controller">
         {getPlayButton()}
         {getShowButton()}
-        {numberInput("bpm", 10, 360, props.bpm, (app, val) => app.setState({ beatsPerMinute: val }))}
-        {numberInput("beats", 2, 8, props.tracks[0].selected[0].length, (app, val) => app.setBeatsPerMeasure(val))}
-        {numberInput("measures", 2, 16, props.tracks[0].selected.length, (app, val) => app.setAmountMeasures(val))}
+        {numberInput("bpm", 10, 500, props.bpm, (app, val) => app.setState({ beatsPerMinute: val }))}
+        {numberInput("beats", 1, 8, props.tracks[0].selected[0].length, (app, val) => app.setBeatsPerMeasure(val))}
+        {numberInput("measures", 1, 16, props.tracks[0].selected.length, (app, val) => app.setAmountMeasures(val))}
         {getThemeInput()}
+        <p id="instructions">Press Enter in a box to update changes!</p>
       </div>
     )
   } else {
