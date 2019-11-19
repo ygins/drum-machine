@@ -68,7 +68,6 @@ export default class MyApp extends React.Component<Props, State>{
       track.selected.length = newAmount;
       if (newAmount > oldLength) {
         for (let newMeasureIndex = oldLength; newMeasureIndex < track.selected.length; newMeasureIndex++) {
-          console.log(newMeasureIndex + " INDEX")
           track.selected[newMeasureIndex] = [];
           track.selected[newMeasureIndex].length = this.state.tracks[0].selected[0].length;
           for (let i = 0; i < track.selected[newMeasureIndex].length; i++) {
