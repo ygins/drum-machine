@@ -3,6 +3,7 @@ import { SoundCache, Sound, TrackInfo } from "../../sounds";
 import Measure from "../Measure";
 import Themes from "../../Theme";
 import TrackController from "../TrackController";
+import {Howl} from "howler";
 import "./style.scss"
 
 interface Props {

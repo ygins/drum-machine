@@ -1,4 +1,5 @@
 import React from "react";
+import {Howl} from "howler";
 import "./style.scss";
 
 interface Props {

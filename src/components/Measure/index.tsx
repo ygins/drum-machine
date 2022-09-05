@@ -2,6 +2,7 @@ import React from "react";
 import "./style.scss";
 import Themes from "../../Theme";
 import TrackLight from "../TrackLight";
+import {Howl} from 'howler';
 
 interface Props {
   beats: boolean[],
