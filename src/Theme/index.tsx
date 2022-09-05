@@ -90,10 +90,11 @@ export const getTheme = (name: string) => {
 export const getThemeNames = () => themeMap.keys();
 export const Context = React.createContext<Theme>(THEMES[0])
 
-export default {
+const exp = {
   THEMES: THEMES,
   addTheme: addTheme,
   getTheme: getTheme,
   getThemeNames: getThemeNames,
   Context: Context
 }
+export default exp
