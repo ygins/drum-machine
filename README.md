@@ -1,6 +1,6 @@
 Simple drum machine, app can be found here:
 
-https://yona168.github.io/drum-machine/.
+https://ygins.github.io/drum-machine/.
 
 Sounds are hosted with Glitch, so it may take a little to load.
 
