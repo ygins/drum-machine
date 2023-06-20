@@ -48,15 +48,6 @@ export const THEMES: Theme[] = [
     button: "orange",
     text: "yellow",
     name: "hot dog"
-  },
-  {
-    background: "red",
-    machine: "darkred",
-    border: "10px solid darkred",
-    measureBorder: "2px solid darkred",
-    button: "red",
-    text: "darkred",
-    name: "red"
   }
 ]
 THEMES.forEach(theme=>themeMap.set(theme.name, theme));
