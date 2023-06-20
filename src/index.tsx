@@ -2,11 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { SoundCache} from "./sounds";
 import * as serviceWorker from './serviceWorker';
 
 async function render() {
-  ReactDOM.render(<App soundCache={await SoundCache.create()} />, document.getElementById('root'));
+  ReactDOM.render(<App/>, document.getElementById('root'));
 }
 
 render();

@@ -7,28 +7,35 @@ import { faCaretLeft, faCaretRight, faPlayCircle, faStop } from "@fortawesome/fr
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import "./App.scss";
 
-interface Props {
-  soundCache: SoundCache
-};
+interface Props{
+
+}
+
 interface State {
   playing: boolean,
   appHeight: number,
   tracks: TrackInfo[],
   beatsPerMinute: number,
-  theme: Theme
+  theme: Theme,
+  soundCache: SoundCache|null
 };
 
 export default class MyApp extends React.Component<Props, State>{
 
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       playing: false,
       appHeight: 0,
       beatsPerMinute: 90,
       tracks: this.getInitialSounds(),
-      theme: THEMES[0]
+      theme: THEMES[0],
+      soundCache: null
     };
+    SoundCache.create().then(it=>this.setState({
+      ...this.state,
+      soundCache: it
+    }))
   }
 
   private getInitialSounds() {
@@ -80,7 +87,10 @@ export default class MyApp extends React.Component<Props, State>{
   }
 
   render() {
-    return (
+    if(!this.state.soundCache){
+      return <p>Loading... Please wait 10-20 seconds...</p>
+    }
+    else return (
       <div className="DrumMachineApp" style={{ height: `${this.state.appHeight}px` }}>
         <Context.Provider value={this.state.theme}>
           <Controller
@@ -91,7 +101,7 @@ export default class MyApp extends React.Component<Props, State>{
           </Controller>
           <Grid>
             <DrumMachine
-              soundCache={this.props.soundCache}
+              soundCache={this.state.soundCache}
               playing={this.state.playing}
               beatsPerMinute={this.state.beatsPerMinute}
               setPlaying={(playing: boolean) => {
