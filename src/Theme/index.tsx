@@ -57,24 +57,6 @@ export const THEMES: Theme[] = [
     button: "red",
     text: "darkred",
     name: "red"
-  },
-  {
-    background: "red",
-    machine: "white",
-    border: "10px solid yellow",
-    measureBorder: "2px solid black",
-    button: "black",
-    text: "white",
-    name: "antidisestablishmentarianism"
-  },
-  {
-    background: "pink",
-    machine: "red",
-    border: "25000000000000000000000000000000000000000px solid black",
-    measureBorder: "250px solid black",
-    button: "yellow",
-    text: "pink",
-    name: "idk"
   }
 ]
 THEMES.forEach(theme=>themeMap.set(theme.name, theme));
